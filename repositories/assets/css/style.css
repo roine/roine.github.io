@@ -1,0 +1,15 @@
+.listRepos {
+    margin: 20px auto;
+    width: 90%;
+}
+
+.repo {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+    display: block;
+    margin: 20px auto;
+    min-height: 100px;
+    padding: 20px;
+    width: 95%;
+}
+
+
