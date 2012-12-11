@@ -4,12 +4,22 @@
 }
 
 .repo {
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
-    display: block;
-    margin: 20px auto;
-    min-height: 100px;
-    padding: 20px;
-    width: 95%;
+	box-shadow: 0 9px 4px -5px rgba(0, 0, 0, 0.5);
+	display: block;
+	margin: 20px auto;
+	min-height: 100px;
+	padding: 20px;
+	width: 95%;
+	border: 1px solid silver;
 }
 
+.repo a{
+	color:black;
+	text-decoration:none;
+	font-weight:300;
+	font-size:24px;
+	text-transform: Uppercase;
+	font-family: 'Gafata', sans-serif;
+	outline:none;
+}
 
