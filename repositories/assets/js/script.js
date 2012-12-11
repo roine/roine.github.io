@@ -1,4 +1,4 @@
-$.getJSON('https://api.github.com/users/roine/repos?callback=?', function (response) {
+$.getJSON('https://api.github.com/users/roine/repos?sort=updated&?callback=?', function (response) {
 	var repos = response.data;
 
 	var totalRepos = 0,
