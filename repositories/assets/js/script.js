@@ -25,5 +25,3 @@ $.getJSON('https://api.github.com/users/roine/repos?sort=updated&callback=?', fu
 	});
 	$('.totalRepos').find('span').text(totalRepos);
 });
-
-console.log(jQuery.ajaxSetup('cache'))
