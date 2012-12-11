@@ -5,16 +5,18 @@ $.getJSON('https://api.github.com/users/roine/repos?sort=updated&callback=?', fu
 		i = 0,
 		listRepos = [];
 
-	$.each(repos, function(index, value){
+	$.each(repos, function(index, repo){
 		
-		if(!repos[index].fork){
-			listRepos[i] = [{
-				'name': repos[index].name,
-				'updated_at':repos[index].updated_at,
-				'created_at':repos[index].created_at
-			}];
-
-			
+		if(!repo.fork){
+			$(document.createElement('div'))
+			.attr({
+				'data-name':repo.name,
+				'data-created_at':Date.parse(repo.created_at),
+				'data-updated_at':Date.parse(repo.updated_at)
+			})
+			.addClass('repo')
+			.html(repo.name)
+			.appendTo('.listRepos')
 
 
 			totalRepos = ++i;
@@ -22,7 +24,6 @@ $.getJSON('https://api.github.com/users/roine/repos?sort=updated&callback=?', fu
 		}
 	});
 	$('.totalRepos').find('span').text(totalRepos);
-	
 });
-console.log(listRepos);
+
 console.log(jQuery.ajaxSetup('cache'))
