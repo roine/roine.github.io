@@ -12,19 +12,40 @@ a:focus{
 	font-weight:bold;
 }
 
+body:before {
+  	content: "";
+  	position: fixed;
+	top: -10px;
+	left: 0;
+	width: 100%;
+  	height: 10px;
+
+    -webkit-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
+    -moz-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
+    box-shadow: 0px 0px 10px rgba(0,0,0,.8);
+
+  	z-index: 100;
+}
+
+/* custom */
+
 .listRepos {
     margin: 20px auto;
     width: 90%;
+    position:relative;
 }
 
 .repo {
 	box-shadow: 0 9px 4px -5px rgba(0, 0, 0, 0.5);
 	display: block;
-	margin: 20px auto;
+	position:absolute;
+	left:0;
+	top:0;
 	min-height: 100px;
 	padding: 20px;
 	width: 95%;
 	border: 1px solid silver;
+	background:white;
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;	
 	box-sizing:border-box;
@@ -38,6 +59,13 @@ a:focus{
 	text-transform: Uppercase;
 	font-family: 'Gafata', sans-serif;
 	
+}
+.description {
+    color: grey;
+    margin-top: 10px;
+    min-width: 300px;
+    width: 30%;
+    font-size:.8em;
 }
 
 
