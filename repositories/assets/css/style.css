@@ -1,3 +1,17 @@
+/*
+ * General css
+*/
+a{
+	text-decoration:none;
+	color:teal;
+}
+a:focus{
+	outline:none;
+}
+.selected{
+	font-weight:bold;
+}
+
 .listRepos {
     margin: 20px auto;
     width: 90%;
@@ -11,15 +25,20 @@
 	padding: 20px;
 	width: 95%;
 	border: 1px solid silver;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;	
+	box-sizing:border-box;
 }
+
 
 .repo a{
 	color:black;
-	text-decoration:none;
 	font-weight:300;
 	font-size:24px;
 	text-transform: Uppercase;
 	font-family: 'Gafata', sans-serif;
-	outline:none;
+	
 }
+
+
 

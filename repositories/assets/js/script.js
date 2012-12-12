@@ -1,51 +1,83 @@
 
-// clean the repository name
-var cleanRepoName = function (str) {
-	str = str.replace('_', ' ');
-	str = str.replace('-', ' ');
-	return str;
-};
+(function ($, window) {
 
-// create the html boxes
-var createRepoBox = function (repo) {
-	homepage = repo.homepage || repo.html_url;
+	'use strict';
+	/*jslint browser: true*/
+	/*global jQuery*/
 
-	var link = $(document.createElement('a'))
-		.attr({
-			'href':homepage,
-			'ref': repo.name
+	var sort_by = 'updated',
+		user = 'roine';
+
+
+	// clean the repository name
+	function cleanRepoName (str) {
+		str = str.replace('_', ' ');
+		str = str.replace('-', ' ');
+		return str;
+	}
+
+	// create the html boxes
+	function createRepoBox (repo) {
+		var homepage = repo.homepage || repo.html_url,
+
+			link = $(document.createElement('a'))
+			.attr({
+				'href':homepage,
+				'ref': repo.name
+			})
+			.text(cleanRepoName(repo.name)),
+
+		repoBox = $(document.createElement('div'))
+		.data('sort', {
+			'name': repo.name,
+			'created_at': Date.parse(repo.created_at),
+			'updated_at': Date.parse(repo.updated_at),
+			'watchers': repo.watchers,
+			'open_issues_count': repo.open_issues_count,
+			'language': repo.language
 		})
-		.text(cleanRepoName(repo.name));
+		.addClass('repo')
+		.append(link)
+		.appendTo('.listRepos');
 
-	$(document.createElement('div'))
-	.attr({
-		'data-name':repo.name,
-		'data-created_at':Date.parse(repo.created_at),
-		'data-updated_at':Date.parse(repo.updated_at)
-	})
-	.addClass('repo')
-	.append(link)
-	.appendTo('.listRepos');
-}
-
-$.getJSON('https://api.github.com/users/roine/repos?sort=updated&callback=?', function (response) {
-	var repos = response.data;
-
-	var totalRepos = 0,
-		i = 0,
-		listRepos = [],
-		homepage = '';
-
-	$.each(repos, function (index, repo) {
+	}
 
 
-		if(!repo.fork) {
+	$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
 
-			createRepoBox(repo)
+		var repos = response.data,
+			totalRepos = 0;
 
-			totalRepos = ++i;
+		$.each(repos, function (index, repo) {
 
-		}
+			if(!repo.fork) {
+
+				createRepoBox(repo);
+
+				totalRepos += 1;
+
+			}
+		});
+
+		$('#'+sort_by).addClass('selected');
+		$('.totalRepos').find('span').text(totalRepos);
 	});
-	$('.totalRepos').find('span').text(totalRepos);
-});
+	// end getJSON
+
+	$('.sort').on('click', 'a', function(){
+
+		// remove the bold to all link into sort
+		$('.sort a').removeClass('selected');
+
+		// add bold to the current link
+		$(this).addClass('selected');
+
+		$('.repo').each(function(i, rep){
+			var created_at = $(rep).data('created_at'),
+				updated_at = $(rep).data('updated_at');
+		});
+
+		return false;
+	});
+	
+}(jQuery, window));
