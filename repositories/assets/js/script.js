@@ -9,7 +9,10 @@
 		user = 'roine',
 		translate = 0,
 		margin = 20,
-		sortDir = -1;
+		sortDir = -1,
+		customUser = window.location.hash.substring(1);
+
+	if(customUser) user = customUser;
 
 	function formatDate (date){
 		var dDate = new Date(date),
