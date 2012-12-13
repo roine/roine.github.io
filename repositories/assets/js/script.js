@@ -8,17 +8,21 @@
 	var sort_by = 'updated',
 		user = 'roine',
 		translate = 0,
-		margin = 20;
+		margin = 20,
+		sortDir = -1;
 
 	function formatDate (date){
 		var dDate = new Date(date),
 			day = dDate.getDate(),
 			month = dDate.getMonth(),
-			year = dDate.getFullYear();
-		month += 1;
+			year = dDate.getFullYear(),
+			m_names = ["January", "February", "March", 
+"April", "May", "June", "July", "August", "September", 
+"October", "November", "December"];
+
 		day = (day < 10 && day > 0) ? '0'+day : day;
-		month = (month < 10 && month > 0) ? '0'+month : month;
-		return day+'/'+month+'/'+year;  
+		//month = (month < 10 && month > 0) ? '0'+month : month;
+		return day+' '+m_names[month]+' '+year;  
 	}
 	// clean the repository name
 	function cleanRepoName (str) {
@@ -47,18 +51,22 @@
 			.text(repo.description)
 			.appendTo(leftMenu),
 
+			dates = $(document.createElement('div'))
+			.addClass('dates')
+			.html('<ul><li class="created"><label>Created at:</label> '+formatDate(repo.created_at)+'</li><li class="updated"><label>Updated at:</label> '+formatDate(repo.updated_at)+'</li></ul>')
+			.appendTo(leftMenu),
+
 			repoBox = $(document.createElement('div'))
 			.data('sort', {
 				'name': repo.name,
-				'created_at': Date.parse(repo.created_at),
-				'updated_at': Date.parse(repo.updated_at),
+				'created': Date.parse(repo.created_at),
+				'updated': Date.parse(repo.updated_at),
 				'watchers': repo.watchers,
 				'open_issues_count': repo.open_issues_count,
 				'language': repo.language
 			})
 			.addClass('repo drop-shadow')
 			.append(leftMenu)
-			.append('created at: '+formatDate(repo.created_at))
 			.appendTo('.listRepos');
 
 		
@@ -100,35 +108,33 @@
 		});
 		$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 		$('#'+sort_by).addClass('selected');
+		$('.details .dates .'+sort_by).addClass('selected');
 		$('.totalRepos').find('span').text(totalRepos);
 		
 	});
 	// end getJSON
 
 	$('.sort').on('click', 'a', function(){
+
 		var sortBy = $(this).data('sort'),
-			sortDir = -1,
 			translate = 0;
 
-		function oposite (n) {
-			return (n === 1) ? -1 : 1;
+
+		if($(this).hasClass('selected')){
+			sortDir = (sortDir === 1) ? -1 : 1;
 		}
+
+		// remove the bold to all link into sort
+		$('.sort a, .details .dates li').removeClass('selected');
+		// add bold to the current link
+		$(this).add('.details .dates .'+sortBy).addClass('selected');
 
 		function sortFn ( alpha, beta ) {
             var a = $.data(alpha, 'sort')[sortBy],
                 b = $.data(beta, 'sort')[sortBy];
             return (( a > b ) ? 1 : ( a < b ) ? -1 : 0) * sortDir;
         }
-
-		if($(this).hasClass('selected')){
-			sortDir = oposite(sortDir);
-		}
-			
-		// remove the bold to all link into sort
-		$('.sort a').removeClass('selected');
-
-		// add bold to the current link
-		$(this).addClass('selected');
+		
 
 		// sort the repositories
 		var sorted = $('.repo').sort( sortFn );

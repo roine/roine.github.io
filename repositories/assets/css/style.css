@@ -62,7 +62,9 @@ body:before {
 }
 .details{
 	display: block;
-    width: 30%;
+    width: 35%;
+    position:absolute;
+    height:90%;
 }
 
 .details a{
@@ -79,6 +81,22 @@ body:before {
     font-size:.8em;
 }
 
+.details .dates{
+	font-size:.65em;
+	color:rgba(0,0,0,.8);
+	position:absolute;
+	bottom:0;
+	padding:5px 0;
+}
+.details .dates ul{
+	list-style: none;
+	display:inline;
+	padding:0;
+}
+.details .dates li{
+	display:inline;
+	margin:5px;
+}
 footer{
 	width:84%;
 	border:1px solid silver;
