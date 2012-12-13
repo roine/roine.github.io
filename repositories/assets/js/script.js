@@ -10,7 +10,16 @@
 		translate = 0,
 		margin = 20;
 
-
+	function formatDate (date){
+		var dDate = new Date(date),
+			day = dDate.getDate(),
+			month = dDate.getMonth(),
+			year = dDate.getFullYear();
+		month += 1;
+		day = (day < 10 && day > 0) ? '0'+day : day;
+		month = (month < 10 && month > 0) ? '0'+month : month;
+		return day+'/'+month+'/'+year;  
+	}
 	// clean the repository name
 	function cleanRepoName (str) {
 		str = str.replace('_', ' ');
@@ -22,17 +31,21 @@
 	// create the html boxes
 	function createRepoBox (repo) {
 		var homepage = repo.homepage || repo.html_url,
+			leftMenu = $(document.createElement('a'))
+			.addClass('details'),
 
 			link = $(document.createElement('a'))
 			.attr({
 				'href':homepage,
 				'ref': repo.name
 			})
-			.text(cleanRepoName(repo.name)),
+			.text(cleanRepoName(repo.name))
+			.appendTo(leftMenu),
 
 			description = $(document.createElement('div'))
 			.addClass('description')
-			.text(repo.description),
+			.text(repo.description)
+			.appendTo(leftMenu),
 
 			repoBox = $(document.createElement('div'))
 			.data('sort', {
@@ -43,9 +56,9 @@
 				'open_issues_count': repo.open_issues_count,
 				'language': repo.language
 			})
-			.addClass('repo')
-			.append(link)
-			.append(description)
+			.addClass('repo drop-shadow')
+			.append(leftMenu)
+			.append('created at: '+formatDate(repo.created_at))
 			.appendTo('.listRepos');
 
 		
@@ -61,15 +74,16 @@
 
 		$.each(vendor, function (i, vendor) {
 			$repo.css(vendor+'transform', 'translate('+center+'px,'+data[1]+'px)');
-
 		});
+		return data[1];
 	}
 
 
 	$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
 
 		var repos = response.data,
-			totalRepos = 0;
+			totalRepos = 0,
+			heightWrapper = 0;
 
 		$.each(repos, function (index, repo) {
 
@@ -77,13 +91,14 @@
 
 				var $repo = createRepoBox(repo);
 			
-				translateCSS($repo);
+				heightWrapper = translateCSS($repo);
 
 				totalRepos += 1;
 
 			}
+				
 		});
-
+		$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 		$('#'+sort_by).addClass('selected');
 		$('.totalRepos').find('span').text(totalRepos);
 		
@@ -91,19 +106,38 @@
 	// end getJSON
 
 	$('.sort').on('click', 'a', function(){
+		var sortBy = $(this).data('sort'),
+			sortDir = -1,
+			translate = 0;
 
+		function oposite (n) {
+			return (n === 1) ? -1 : 1;
+		}
+
+		function sortFn ( alpha, beta ) {
+            var a = $.data(alpha, 'sort')[sortBy],
+                b = $.data(beta, 'sort')[sortBy];
+            return (( a > b ) ? 1 : ( a < b ) ? -1 : 0) * sortDir;
+        }
+
+		if($(this).hasClass('selected')){
+			sortDir = oposite(sortDir);
+		}
+			
 		// remove the bold to all link into sort
 		$('.sort a').removeClass('selected');
 
 		// add bold to the current link
 		$(this).addClass('selected');
 
-		$('.repo').each(function(i, rep){
-			var created_at = $(rep).data('created_at'),
-				updated_at = $(rep).data('updated_at');
+		// sort the repositories
+		var sorted = $('.repo').sort( sortFn );
 
+		$.each(sorted, function(index, elem){
+			$(elem).data('translate', [0, translate]);
+			translate += $(elem).outerHeight()+margin;
+			translateCSS($(elem));
 		});
-
 		return false;
 	});
 	
