@@ -33,5 +33,7 @@ Current features:
   - commit visualisation 
   - display the collaborators
   - better colors for the buttons
+  - card with information about user
+  - search with highlighting
 
 

@@ -41,14 +41,6 @@ body:before {
 	border-radius:5px;
 	box-shadow:0 1px rgba(0,0,0,.5);
 	margin:20px auto;
-	background: #111111; /* Old browsers */
-	background: -moz-radial-gradient(center, ellipse cover, #111111 2%, #eeeeee 99%); /* FF3.6+ */
-	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(2%,#111111), color-stop(99%,#eeeeee)); /* Chrome,Safari4+ */
-	background: -webkit-radial-gradient(center, ellipse cover, #111111 2%,#eeeeee 99%); /* Chrome10+,Safari5.1+ */
-	background: -o-radial-gradient(center, ellipse cover, #111111 2%,#eeeeee 99%); /* Opera 12+ */
-	background: -ms-radial-gradient(center, ellipse cover, #111111 2%,#eeeeee 99%); /* IE10+ */
-	background: radial-gradient(ellipse at center, #111111 2%,#eeeeee 99%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#eeeeee',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 
 }
 .noise{
