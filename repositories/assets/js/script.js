@@ -40,6 +40,7 @@
 			.addClass('details'),
 
 			link = $(document.createElement('a'))
+			.addClass('name')
 			.attr({
 				'href':homepage,
 				'ref': repo.name
@@ -112,7 +113,7 @@
 			});
 			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 			$('#'+sort_by).addClass('selected');
-			$('.details .dates .'+sort_by).addClass('selected');
+			$('.details .'+sort_by).addClass('selected');
 			$('.totalRepos').find('span').text(totalRepos);
 			
 		});
@@ -132,9 +133,9 @@
 		}
 
 		// remove the bold to all link into sort
-		$('.sort a, .details .dates li').removeClass('selected');
+		$('.sort a, .details .selected').removeClass('selected');
 		// add bold to the current link
-		$(this).add('.details .dates .'+sortBy).addClass('selected');
+		$(this).add('.details .'+sortBy).addClass('selected');
 
 		function sortFn ( alpha, beta ) {
             var a = $.data(alpha, 'sort')[sortBy],
@@ -161,5 +162,6 @@
 		});
 		return false;
 	});
+
 	_init();
 }(jQuery, window));
