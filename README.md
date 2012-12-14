@@ -35,5 +35,6 @@ Current features:
   - better colors for the buttons
   - card with information about user
   - search with highlighting
+  - add a loading message
 
 
