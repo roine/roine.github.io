@@ -88,7 +88,7 @@
 
 		return data[1];
 	}
-	function _init(){
+	function init(){
 		$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
 
 			var repos = response.data,
@@ -141,12 +141,12 @@
             var a = $.data(alpha, 'sort')[sortBy],
                 b = $.data(beta, 'sort')[sortBy];
             if(typeof a === 'string' && typeof b === 'string'){
-            	a = a.toLowerCase();
-            	b = b.toLowerCase();
-            	return (( b > a ) ? 1 : ( b < a ) ? -1 : 0) * sortDir;
+				a = a.toLowerCase();
+				b = b.toLowerCase();
+				return (( b > a ) ? 1 : ( b < a ) ? -1 : 0) * sortDir;
             }
             else if(typeof a === 'number' && typeof b === 'number'){
-            	return (( a > b ) ? 1 : ( a < b ) ? -1 : 0) * sortDir;
+				return (( a > b ) ? 1 : ( a < b ) ? -1 : 0) * sortDir;
             }
             
         }
@@ -163,5 +163,5 @@
 		return false;
 	});
 
-	_init();
+	init();
 }(jQuery, window));
