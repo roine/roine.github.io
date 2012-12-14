@@ -6,39 +6,37 @@
 	/*global jQuery*/
 
 	var sort_by = 'updated',
-		user = 'roine',
 		translate = 0,
 		margin = 20,
 		sortDir = -1,
-		customUser = window.location.hash.substring(1);
+		customUser = window.location.hash.substring(1),
+		user = customUser || 'roine';
 
-	if(customUser) user = customUser;
 
 	function formatDate (date){
 		var dDate = new Date(date),
 			day = dDate.getDate(),
 			month = dDate.getMonth(),
 			year = dDate.getFullYear(),
-			m_names = ["January", "February", "March", 
-"April", "May", "June", "July", "August", "September", 
-"October", "November", "December"];
+			m_names = ["January", "February", "March", "April", 
+						"May", "June", "July", "August", 
+						"September", "October", "November", "December"];
 
 		day = (day < 10 && day > 0) ? '0'+day : day;
-		//month = (month < 10 && month > 0) ? '0'+month : month;
+
 		return day+' '+m_names[month]+' '+year;  
 	}
-	// clean the repository name
+
+	// clean the repository name (replace dash and underscores by whitespace)
 	function cleanRepoName (str) {
-		str = str.replace('_', ' ');
-		str = str.replace('-', ' ');
-		return str;
+		return  str.replace(/_|-/g, ' ');	
 	}
 
 	
 	// create the html boxes
 	function createRepoBox (repo) {
 		var homepage = repo.homepage || repo.html_url,
-			leftMenu = $(document.createElement('a'))
+			leftMenu = $(document.createElement('div'))
 			.addClass('details'),
 
 			link = $(document.createElement('a'))
@@ -86,35 +84,41 @@
 		$.each(vendor, function (i, vendor) {
 			$repo.css(vendor+'transform', 'translate('+center+'px,'+data[1]+'px)');
 		});
+
 		return data[1];
 	}
+	function _init(){
+		$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
 
-
-	$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
-
-		var repos = response.data,
-			totalRepos = 0,
-			heightWrapper = 0;
-
-		$.each(repos, function (index, repo) {
-
-			if(!repo.fork) {
-
-				var $repo = createRepoBox(repo);
-			
-				heightWrapper = translateCSS($repo);
-
-				totalRepos += 1;
-
+			var repos = response.data,
+				totalRepos = 0,
+				heightWrapper = 0;
+			if(repos.message === "Not Found" || !repos.length){
+				alert('No repository for '+user);
+				return;
 			}
+			$.each(repos, function (index, repo) {
+
+				if(!repo.fork) {
+
+					var $repo = createRepoBox(repo);
 				
+					heightWrapper = translateCSS($repo);
+
+					totalRepos += 1;
+
+				}
+					
+			});
+			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
+			$('#'+sort_by).addClass('selected');
+			$('.details .dates .'+sort_by).addClass('selected');
+			$('.totalRepos').find('span').text(totalRepos);
+			
 		});
-		$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
-		$('#'+sort_by).addClass('selected');
-		$('.details .dates .'+sort_by).addClass('selected');
-		$('.totalRepos').find('span').text(totalRepos);
-		
-	});
+	}
+
+	
 	// end getJSON
 
 	$('.sort').on('click', 'a', function(){
@@ -135,7 +139,15 @@
 		function sortFn ( alpha, beta ) {
             var a = $.data(alpha, 'sort')[sortBy],
                 b = $.data(beta, 'sort')[sortBy];
-            return (( a > b ) ? 1 : ( a < b ) ? -1 : 0) * sortDir;
+            if(typeof a === 'string' && typeof b === 'string'){
+            	a = a.toLowerCase();
+            	b = b.toLowerCase();
+            	return (( b > a ) ? 1 : ( b < a ) ? -1 : 0) * sortDir;
+            }
+            else if(typeof a === 'number' && typeof b === 'number'){
+            	return (( a > b ) ? 1 : ( a < b ) ? -1 : 0) * sortDir;
+            }
+            
         }
 		
 
@@ -149,5 +161,5 @@
 		});
 		return false;
 	});
-	
+	_init();
 }(jQuery, window));
