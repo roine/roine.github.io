@@ -73,7 +73,7 @@ body:before {
 }
 .btn:last-child{
 	border-radius:0 3px 3px 0;
-	border-right: 1px solid rgba(0, 0, 0, 0.1);;
+	border-right: 1px solid rgba(0, 0, 0, 0.3);;
 }
 
 .btn:hover{
@@ -99,7 +99,7 @@ body:before {
 .btn:not(.selected){
 	border-top: 1px solid rgba(0, 0, 0, 0.3);
 	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-	box-shadow:0 3px #2E9696, -1px 3px rgba(0, 0, 0, 0.2), 0 5px 4px rgba(0,0,0,.5);
+	box-shadow:0 3px #2E9696, -1px 3px rgba(0, 0, 0, 0.2), 0 7px 8px rgba(0,0,0,.3);
 }
 
 .btn:last-child.selected{
@@ -113,15 +113,16 @@ body:before {
 	background-color:aquamarine;
 }
 
-.btn.blue:hover{
+.btn.blue:not(.selected):hover{
 	background-color:#248484;
+	box-shadow:0 3px #155151, -1px 3px rgba(0,0,0,.2), 0 7px 8px rgba(0,0,0,.3);
 }
 .btn.blue.selected{
 	background-color:#248484;
 }
 
 .btn.blue:not(.selected){
-	box-shadow:0 3px #2e9696, -1px 3px rgba(0,0,0,.2), 0 5px 4px rgba(0,0,0,.5);
+	box-shadow:0 3px #2E9696, -1px 3px rgba(0, 0, 0, .2), 0 7px 8px rgba(0, 0, 0, .3);
 	
 }
 

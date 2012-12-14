@@ -5,6 +5,15 @@ My repositories list into a cool UI
 
 [roine.github.com/repositories](http://roine.github.com/repositories)
 
+Also could be used that way 
+
+	roine.github.com/repositories#username
+
+Where username is a existing user name, exemple:
+
+[roine.github.com/repositories#twitter](http://roine.github.com/repositories#twitter)
+
+
 Current features:
   - Sorting
   	- created
