@@ -13,6 +13,8 @@
 		user = customUser || 'roine';
 
 
+
+	// format the date like following dd mm yyyy, 18 January 2000
 	function formatDate (date){
 		var dDate = new Date(date),
 			day = dDate.getDate(),
@@ -22,6 +24,7 @@
 						"May", "June", "July", "August", 
 						"September", "October", "November", "December"];
 
+		// add at beggining if necessary
 		day = (day < 10 && day > 0) ? '0'+day : day;
 
 		return day+' '+m_names[month]+' '+year;  
@@ -77,6 +80,7 @@
 		return repoBox;
 	}
 
+	// translate the boxes
 	function translateCSS ($repo) {
 		var vendor = ['-moz-', '-webkit-', '-ms-', '-o-', ''],
 			data = $repo.data('translate'),
@@ -88,6 +92,8 @@
 
 		return data[1];
 	}
+
+	// constructor
 	function init(){
 		$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
 
@@ -117,11 +123,8 @@
 			$('.totalRepos').find('span').text(totalRepos);
 			
 		});
-	}
-
 	
-	// end getJSON
-
+		
 	$('.sort').on('click', 'a', function(){
 
 		var sortBy = $(this).data('sort'),
@@ -162,6 +165,10 @@
 		});
 		return false;
 	});
+
+	}
+	// end init
+
 
 	init();
 }(jQuery, window));
