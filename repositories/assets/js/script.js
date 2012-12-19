@@ -12,10 +12,39 @@
 		customUser = window.location.hash.substring(1),
 		user = customUser || 'roine';
 
+	function timespace(rawDate){
+		var date, seconds, formats, i = 0, f;
+        date = new Date(rawDate);
+        seconds = (new Date() - date) / 1000;
+        formats = [
+            [60, 'seconds', 1],
+            [120, '1 minute ago'],
+            [3600, 'minutes', 60],
+            [7200, '1 hour ago'],
+            [86400, 'hours', 3600],
+            [172800, 'Yesterday'],
+            [604800, 'days', 86400],
+            [1209600, '1 week ago'],
+            [2678400, 'weeks', 604800]
+        ];
 
+        while (f = formats[i ++]) {
+            if (seconds < f[0]) {
+                return f[2] ? Math.floor(seconds / f[2]) + ' ' + f[1] + ' ago' :  f[1];
+            }
+        }
+        return 'A while ago';
+	}
+
+	function lastRepoOverview(repo){
+		var item = $(document.createElement('li'))
+		.text(cleanRepoName(repo.name)+' ('+timespace(repo.updated_at)+')')
+
+		$('.lastRepos').append(item);
+	}
 
 	// format the date like following dd mm yyyy, 18 January 2000
-	function formatDate (date){
+	function formatDate(date){
 		var dDate = new Date(date),
 			day = dDate.getDate(),
 			month = dDate.getMonth(),
@@ -110,7 +139,7 @@
 		// remove the bold to all link into sort
 		$('.sort a, .details .selected').removeClass('selected');
 		// add bold to the current link
-		$(that).add('.details .'+sortBy).addClass('selected');
+		$(that).add('.repos .details .'+sortBy).addClass('selected');
 
 		function sortFn ( alpha, beta ) {
             var a = $.data(alpha, 'sort')[sortBy],
@@ -151,15 +180,20 @@
 			$.each(repos, function (index, repo) {
 				// only parse the non-forked repositories
 				if(!repo.fork) {
+					// for 2 first
+					if(index < 2){
+						lastRepoOverview(repo);
+					}
+
 					var $repo = createRepoBox(repo);
 					heightWrapper = translateCSS($repo);
 					totalRepos += 1;
-				}
-					
+				}	
 			});
+
 			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 			$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
-			$('.totalRepos').find('span').text(totalRepos);
+			$('.card').find('.totalRepos').text(totalRepos);
 			
 		});
 	}
@@ -167,9 +201,16 @@
 	function getUserInfos(){
 		$.getJSON('https://api.github.com/users/'+user+'?callback=?', function (response) {
 			var $box = $('.card'),
-				info = response.data;
+				info = response.data,
+				bio =  info.bio || 'No description yet.',
+				created_at = formatDate(info.created_at);
+
 			$box.find('.name').text(info.name+' AKA ').end()
-				.find('.nickname').text(info.login);
+				.find('.nickname').text(info.login).end()
+				.find('.bio').text(bio).end()
+				.find('.created').text(created_at).end()
+				.find('.company').text(info.company)
+				;
 
 		});
 	}

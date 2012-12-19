@@ -1,6 +1,9 @@
 /*
  * General css
 */
+html, body{
+	min-height:100%;
+}
 a{
 	text-decoration:none;
 	color:teal;
@@ -80,7 +83,7 @@ body:before {
 .btn.selected{
 	background-color:rgba(0,0,0,.5);
 	text-shadow:0 1px 1px rgba(0,0,0,.8);
-	box-shadow: 8px 0 4px -1px rgba(0, 0, 0, .3) inset, -8px 0 4px -1px rgba(0, 0, 0, .3) inset;
+	box-shadow: 8px 0 8px -1px rgba(0, 0, 0, .3) inset, -8px 0 8px -1px rgba(0, 0, 0, .3) inset;
 	color: white;
 	-moz-transform:perspective(800px) translateY(-2px);
 	-webkit-transform:perspective(800px) translateY(-2px);
@@ -97,10 +100,10 @@ body:before {
 }
 
 .btn:last-child.selected{
-	box-shadow:8px 0 4px -1px rgba(0,0,0,.3) inset;
+	box-shadow: 8px 0 8px -1px rgba(0, 0, 0, .3) inset;
 }
 .btn:first-child.selected{
-	box-shadow:-8px 0 4px -1px rgba(0,0,0,.3) inset;
+	box-shadow:-8px 0 8px -1px rgba(0, 0, 0, .3) inset;
 }
 
 .btn.blue{
@@ -128,7 +131,7 @@ display: block;
 background: white;
 padding: 20px;
 }
-.card 
+
 
 
 /* list of repositories style */
