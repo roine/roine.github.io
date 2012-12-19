@@ -30,15 +30,19 @@
 		return day+' '+m_names[month]+' '+year;  
 	}
 
+
+
 	// clean the repository name (replace dash and underscores by whitespace)
 	function cleanRepoName (str) {
 		return  str.replace(/_|-/g, ' ');	
 	}
 
 	
+
 	// create the html boxes
 	function createRepoBox (repo) {
 		var homepage = repo.homepage || repo.html_url,
+
 			leftMenu = $(document.createElement('div'))
 			.addClass('details'),
 
@@ -93,52 +97,20 @@
 		return data[1];
 	}
 
-	// constructor
-	function init(){
-		$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
-
-			var repos = response.data,
-				totalRepos = 0,
-				heightWrapper = 0;
-			if(repos.message === "Not Found" || !repos.length){
-				alert('No repository for '+user);
-				return;
-			}
-			$.each(repos, function (index, repo) {
-
-				if(!repo.fork) {
-
-					var $repo = createRepoBox(repo);
-				
-					heightWrapper = translateCSS($repo);
-
-					totalRepos += 1;
-
-				}
-					
-			});
-			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
-			$('#'+sort_by).addClass('selected');
-			$('.details .'+sort_by).addClass('selected');
-			$('.totalRepos').find('span').text(totalRepos);
-			
-		});
-	
-		
-	$('.sort').on('click', 'a', function(){
-
-		var sortBy = $(this).data('sort'),
+	// click on sort button event handler
+	function sortHandler(){
+		var that = this,
+		sortBy = $(that).data('sort'),
 			translate = 0;
 
-
-		if($(this).hasClass('selected')){
+		if($(that).hasClass('selected')){
 			sortDir = (sortDir === 1) ? -1 : 1;
 		}
 
 		// remove the bold to all link into sort
 		$('.sort a, .details .selected').removeClass('selected');
 		// add bold to the current link
-		$(this).add('.details .'+sortBy).addClass('selected');
+		$(that).add('.details .'+sortBy).addClass('selected');
 
 		function sortFn ( alpha, beta ) {
             var a = $.data(alpha, 'sort')[sortBy],
@@ -154,7 +126,6 @@
             
         }
 		
-
 		// sort the repositories
 		var sorted = $('.repo').sort( sortFn );
 
@@ -164,8 +135,52 @@
 			translateCSS($(elem));
 		});
 		return false;
-	});
+	}
 
+	function getRepos(){
+		$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
+
+			var repos = response.data,
+				totalRepos = 0,
+				heightWrapper = 0;
+
+			if(repos.message === "Not Found" || !repos.length){
+				return;
+			}
+
+			$.each(repos, function (index, repo) {
+				// only parse the non-forked repositories
+				if(!repo.fork) {
+					var $repo = createRepoBox(repo);
+					heightWrapper = translateCSS($repo);
+					totalRepos += 1;
+				}
+					
+			});
+			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
+			$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
+			$('.totalRepos').find('span').text(totalRepos);
+			
+		});
+	}
+
+	function getUserInfos(){
+		$.getJSON('https://api.github.com/users/'+user+'?callback=?', function (response) {
+			var $box = $('.card'),
+				info = response.data;
+			$box.find('.name').text(info.name+' AKA ').end()
+				.find('.nickname').text(info.login);
+
+		});
+	}
+
+	// constructor
+	function init(){
+		
+		getRepos();
+		getUserInfos()
+;		// event Listeners
+		$('.sort').on('click', 'a', sortHandler);
 	}
 	// end init
 
