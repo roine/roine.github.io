@@ -5,13 +5,51 @@
 	/*jslint browser: true*/
 	/*global jQuery*/
 
+
+	/* prototypes */
+
+
+	/* 
+	 * sort_by to automatically sort at first loading
+	 * translate init to 0 for boxes position
+	 * margin is the space between the boxes
+	 * sortDir is the direction of sorting -1 is for DESC
+	 * customUser is the custom user passed in the url hash
+	 * user is default user login 'roine'
+	 * lastRepoOverviewMax define the max number of repositories to display in overview
+	*/
 	var sort_by = 'updated',
 		translate = 0,
 		margin = 20,
 		sortDir = -1,
 		customUser = window.location.hash.substring(1),
-		user = customUser || 'roine';
+		user = customUser || 'roine',
+		lastRepoOverviewMax = 2,
+		languagesColor = {
+			'javascript':'#F15501',
+			'php':'#6E03C1',
+			'ruby':'#701516'
+		};
 
+
+	// create a github's style bar
+	function createBar(obj, total){
+		var key, arr, width;
+
+		// $.each doesn't works, don't know why
+		for(key in obj){
+			width = (obj[key] * 100) / total;
+			$(document.createElement('span'))
+			.addClass(key)
+			.text(obj[key])
+			.appendTo('.meter')
+			.animate({'width': width+'%'}, 'slow')
+			.css('background-color', languagesColor[key.toLowerCase()]);
+		}
+	}
+
+
+	// prettify the space between two date
 	function timespace(rawDate){
 		var date, seconds, formats, i = 0, f;
         date = new Date(rawDate);
@@ -36,14 +74,17 @@
         return 'A while ago';
 	}
 
+
+	// display an overview of the last updated repositories
 	function lastRepoOverview(repo){
 		var item = $(document.createElement('li'))
-		.text(cleanRepoName(repo.name)+' ('+timespace(repo.updated_at)+')')
+		.text(cleanRepoName(repo.name)+' ('+timespace(repo.updated_at)+')');
 
 		$('.lastRepos').append(item);
 	}
 
-	// format the date like following dd mm yyyy, 18 January 2000
+
+	// format the date like following dd mm yyyy, i.e: 18 January 2000
 	function formatDate(date){
 		var dDate = new Date(date),
 			day = dDate.getDate(),
@@ -60,13 +101,11 @@
 	}
 
 
-
 	// clean the repository name (replace dash and underscores by whitespace)
 	function cleanRepoName (str) {
 		return  str.replace(/_|-/g, ' ');	
 	}
 
-	
 
 	// create the html boxes
 	function createRepoBox (repo) {
@@ -113,7 +152,8 @@
 		return repoBox;
 	}
 
-	// translate the boxes
+
+	// translate the boxes using css3 transform
 	function translateCSS ($repo) {
 		var vendor = ['-moz-', '-webkit-', '-ms-', '-o-', ''],
 			data = $repo.data('translate'),
@@ -126,11 +166,13 @@
 		return data[1];
 	}
 
+
 	// click on sort button event handler
 	function sortHandler(){
 		var that = this,
-		sortBy = $(that).data('sort'),
-			translate = 0;
+			sortBy = $(that).data('sort'),
+			translate = 0,
+			sorted;
 
 		if($(that).hasClass('selected')){
 			sortDir = (sortDir === 1) ? -1 : 1;
@@ -156,7 +198,7 @@
         }
 		
 		// sort the repositories
-		var sorted = $('.repo').sort( sortFn );
+		sorted = $('.repo').sort( sortFn );
 
 		$.each(sorted, function(index, elem){
 			$(elem).data('translate', [0, translate]);
@@ -166,12 +208,16 @@
 		return false;
 	}
 
+
+	// Fetch the repositories of a user using getJSON
 	function getRepos(){
 		$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
 
 			var repos = response.data,
 				totalRepos = 0,
-				heightWrapper = 0;
+				heightWrapper = 0,
+				languages = [],
+				$repo;
 
 			if(repos.message === "Not Found" || !repos.length){
 				return;
@@ -180,17 +226,19 @@
 			$.each(repos, function (index, repo) {
 				// only parse the non-forked repositories
 				if(!repo.fork) {
-					// for 2 first
-					if(index < 2){
+					if(index < lastRepoOverviewMax){
 						lastRepoOverview(repo);
 					}
+					if(typeof languages[repo.language] === 'undefined') { languages[repo.language] = 0; } 
+						languages[repo.language] += 1;
 
-					var $repo = createRepoBox(repo);
+					$repo = createRepoBox(repo);
 					heightWrapper = translateCSS($repo);
 					totalRepos += 1;
+
 				}	
 			});
-
+			createBar(languages, totalRepos);
 			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 			$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
 			$('.card').find('.totalRepos').text(totalRepos);
@@ -198,22 +246,26 @@
 		});
 	}
 
+
+	// Fetch the data about the current user using getJSON
 	function getUserInfos(){
 		$.getJSON('https://api.github.com/users/'+user+'?callback=?', function (response) {
 			var $box = $('.card'),
 				info = response.data,
 				bio =  info.bio || 'No description yet.',
-				created_at = formatDate(info.created_at);
+				created_at = formatDate(info.created_at),
+				company = info.company || '';
 
 			$box.find('.name').text(info.name+' AKA ').end()
 				.find('.nickname').text(info.login).end()
 				.find('.bio').text(bio).end()
 				.find('.created').text(created_at).end()
-				.find('.company').text(info.company)
+				.find('.company').text(company)
 				;
 
 		});
 	}
+
 
 	// constructor
 	function init(){
