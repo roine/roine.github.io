@@ -44,7 +44,8 @@
 			.text(obj[key])
 			.appendTo('.meter')
 			.animate({'width': width+'%'}, 'slow')
-			.css('background-color', languagesColor[key.toLowerCase()]);
+			.css('background-color', languagesColor[key.toLowerCase()])
+			.attr('data-perc', Math.floor(width));
 		}
 	}
 
