@@ -14,6 +14,7 @@ a:focus{
 
 body{
 	background-color:#A2D9F0;
+	margin:0;
 }
 body:before {
   	position: fixed;
@@ -98,46 +99,111 @@ body:before {
 	border-top: 1px solid rgba(0, 0, 0, 0.3);
 	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 	box-shadow:0 3px rgba(0,0,0,.2), -1px 3px rgba(0, 0, 0, 0.2), 0 7px 8px rgba(0,0,0,.3);
+	box-shadow:0 3px #152561, -1px 3px rgba(0, 0, 0, .2), 0 7px 8px rgba(0, 0, 0, .3), inset 0 3px 5px rgba(0, 0, 0, .2), inset 0 0 5px rgba(255, 255, 255, .2);
 }
 
 .btn:last-child.selected{
 	box-shadow: 8px 0 8px -1px rgba(0, 0, 0, .3) inset;
 }
 .btn:first-child.selected{
-	box-shadow:-8px 0 8px -1px rgba(0, 0, 0, .3) inset;
+	box-shadow: -8px 0 8px -1px rgba(0, 0, 0, .3) inset, inset 0px 1px 1px 0px rgba(0,0,0,.2), inset 0 -1px rgba(255,255,255,.7);
 }
 
 .btn.blue{
-	background-color:aquamarine;
+	background-color: #445DAA;
 }
 
 .btn.blue:not(.selected):hover{
-	background-color:#248484;
-	box-shadow:0 3px #155151, -1px 3px rgba(0,0,0,.2), 0 7px 8px rgba(0,0,0,.3);
+	background-color:#5c77c9;
+	box-shadow: 0 3px #31457C, -1px 3px rgba(0, 0, 0, .2), 0 7px 8px rgba(0, 0, 0, .3);
 }
 .btn.blue.selected{
-	background-color:#248484;
+	background-color:#5c77c9;
 }
 
 .btn.blue:not(.selected){
-	box-shadow:0 3px #2E9696, -1px 3px rgba(0, 0, 0, .2), 0 7px 8px rgba(0, 0, 0, .3);
+	box-shadow: 0 3px #152561, -1px 3px rgba(0, 0, 0, .2), 0 7px 8px rgba(0, 0, 0, .3), inset 0 3px 5px rgba(0,0,0,.2), inset 0 0 5px rgba(255,255,255,.2);
 	
 }
+
+
 /* top card style*/
 .card{
-	width:50%;
-	height:auto;
-	border:1px solid silver;
+	width: auto;
+	height: 100%;
+	border: 0;
 	display: block;
-	background-color: rgba(0,0,0,.15);
-	padding: 20px;
-	border-radius: 3px;
-	border: 1px solid rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 0, 0, .2);
+	padding: 20px 20px 5px 20px;
+	border-top: 1px solid rgba(0, 0, 0, 0.2);
 	box-shadow: 0 1px 2px rgba(255, 255, 255, .5), inset 0 1px 1px rgba(0, 0, 0, .3);
 	color:white;
 	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	margin: 20px 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	display: block;
+	overflow:hidden;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	transition: all 1s ease;
 }
 
+.card.preload{
+	height: 0;
+	padding: 0 20px;
+	box-shadow: none;
+	border: none;
+}
+
+.card div[class^=col]{
+	width: 20%;
+	float: left;
+	display: block;
+}
+.card span{
+	margin:0 auto;
+	display: block;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	height: auto;
+	position: relative;
+}
+
+
+.card .picture{
+	height: 160px;
+	box-shadow: 0 1px 2px rgba(255, 255, 255, .6), inset 0 2px 1px rgba(0, 0, 0, .6);
+	border: 1px solid rgba(0, 0, 0, .2);
+	display: inline-block;
+	-webkit-box-sizing: border-box;
+	border-radius: 3px;
+}
+.card .pictureWrapper{
+	height:160px;
+	margin-bottom: 10px;
+}
+.card .picture img{
+	position: relative;
+	z-index: -1;
+	border-radius: 3px;
+}
+.card .name{
+    font-size: 1.5em;
+
+}
+
+.card .nickname{
+    color: brown;
+	
+    font-weight: bold;
+    font-size: 46px;
+}
 .meterWrapper{
 	position:relative;
 	width:100%;
@@ -156,15 +222,14 @@ body:before {
 	overflow: hidden;
 }
 .meter span{
-  	text-indent: -999px;
+  	text-indent: -9999px;
 	
   	opacity: .5;	
 
 	-webkit-box-sizing: border-box;
 	  -moz-box-sizing: border-box;
 	  box-sizing: border-box;
-  	/* fix for chrome */
-  	/*height: auto;*/
+
   	display: inline-block;
 }
 .meter span:not(:last-child){

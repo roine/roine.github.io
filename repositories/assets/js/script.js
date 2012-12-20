@@ -30,7 +30,11 @@
 			'php':'#6E03C1',
 			'ruby':'#701516',
 			'scala':'#7DD3B0',
-			'java':'#B07219'
+			'java':'#B07219',
+			'c':'#555',
+			'shell':'#5861CE',
+			'python':'#3581BA',
+			'objective-c':'#438EFF'
 		};
 
 
@@ -38,15 +42,19 @@
 	function createBar(obj, total){
 		var key, arr, width, sorted, lang, reposCount, sortable = [];
 		// sort by most use desc
-		for (var lang in obj)
-		     sortable.push([lang, obj[lang]])
+		for (lang in obj){
+			sortable.push([lang, obj[lang]])
+		}
+		    
 		sorted = sortable.sort(function(a, b){return (a[1]-b[1]) * -1});
 
-		// $.each doesn't works, don't know why
 		for(key in sorted){
+			// modify the following data before displaying it
 			lang = sorted[key][0];
 			reposCount = sorted[key][1];
 			width = (reposCount * 100) / total;
+
+			// create the span tag and append meter
 			$(document.createElement('span'))
 			.addClass(lang)
 			.text(reposCount)
@@ -267,20 +275,23 @@
 				info = response.data,
 				bio =  info.bio || 'No description yet.',
 				created_at = formatDate(info.created_at),
-				company = info.company || '';
+				company = info.company || '',
+				gravatar_link = 'http://www.gravatar.com/avatar/'+info.gravatar_id+'?s=160',
+				picture = $(document.createElement('img')).attr('src', gravatar_link);
 
 			if(info.message){
 				alert(repos.message)
 			}
 
 
-			$box.find('.name').text(info.name+' AKA ').end()
+			$box.find('.name').text(info.name).end()
 				.find('.nickname').text(info.login).end()
 				.find('.bio').text(bio).end()
 				.find('.created').text(created_at).end()
-				.find('.company').text(company)
+				.find('.company').text(company).end()
+				.find('.picture').append(picture)
 				;
-
+			$('.preload').removeClass('preload')
 		});
 	}
 
