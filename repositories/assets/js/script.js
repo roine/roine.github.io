@@ -28,24 +28,32 @@
 		languagesColor = {
 			'javascript':'#F15501',
 			'php':'#6E03C1',
-			'ruby':'#701516'
+			'ruby':'#701516',
+			'scala':'#7DD3B0',
+			'java':'#B07219'
 		};
 
 
 	// create a github's style bar
 	function createBar(obj, total){
-		var key, arr, width;
+		var key, arr, width, sorted, lang, reposCount, sortable = [];
+		// sort by most use desc
+		for (var lang in obj)
+		     sortable.push([lang, obj[lang]])
+		sorted = sortable.sort(function(a, b){return (a[1]-b[1]) * -1});
 
 		// $.each doesn't works, don't know why
-		for(key in obj){
-			width = (obj[key] * 100) / total;
+		for(key in sorted){
+			lang = sorted[key][0];
+			reposCount = sorted[key][1];
+			width = (reposCount * 100) / total;
 			$(document.createElement('span'))
-			.addClass(key)
-			.text(obj[key])
+			.addClass(lang)
+			.text(reposCount)
 			.appendTo('.meter')
 			.animate({'width': width+'%'}, 'slow')
-			.css('background-color', languagesColor[key.toLowerCase()])
-			.attr('data-perc', Math.floor(width));
+			.css('background-color', languagesColor[lang.toLowerCase()])
+			.attr({'data-perc': Math.floor(width), 'data-repos':reposCount});
 		}
 	}
 
@@ -220,9 +228,13 @@
 				languages = [],
 				$repo;
 
-			if(repos.message === "Not Found" || !repos.length){
+			if(repos.message){
+				alert(repos.message)
+			}
+			else if(repos.message === "Not Found" || !repos.length){
 				return;
 			}
+
 
 			$.each(repos, function (index, repo) {
 				// only parse the non-forked repositories
@@ -256,6 +268,11 @@
 				bio =  info.bio || 'No description yet.',
 				created_at = formatDate(info.created_at),
 				company = info.company || '';
+
+			if(info.message){
+				alert(repos.message)
+			}
+
 
 			$box.find('.name').text(info.name+' AKA ').end()
 				.find('.nickname').text(info.login).end()
