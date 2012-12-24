@@ -1,5 +1,5 @@
 
-(function ($, window) {
+// (function ($, window) {
 
 	'use strict';
 	/*jslint browser: true*/
@@ -39,8 +39,8 @@
 
 
 	// create a github's style bar
-	function createBar(obj, total){
-		var key, arr, width, sorted, lang, reposCount, sortable = [];
+	function createBar(obj, total, container){
+		var key, arr, width, sorted, lang, reposCount, $bar, sortable = [];
 		// sort by most use desc
 		for (lang in obj){
 			sortable.push([lang, obj[lang]])
@@ -55,14 +55,15 @@
 			width = (reposCount * 100) / total;
 
 			// create the span tag and append meter
-			$(document.createElement('span'))
+			$bar = $(document.createElement('span'))
 			.addClass(lang)
 			.text(reposCount)
-			.appendTo('.meter')
 			.animate({'width': width+'%'}, 'slow')
 			.css('background-color', languagesColor[lang.toLowerCase()])
-			.attr({'data-perc': Math.floor(width), 'data-repos':reposCount});
+			.attr({'data-perc': Math.floor(width), 'data-repos':reposCount})
+			.appendTo(container);
 		}
+		
 	}
 
 
@@ -120,7 +121,7 @@
 
 	// clean the repository name (replace dash and underscores by whitespace)
 	function cleanRepoName (str) {
-		return  str.replace(/_|-/g, ' ');	
+		return  str.replace(/_|-/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');	
 	}
 
 
@@ -173,7 +174,7 @@
 	// translate the boxes using css3 transform
 	function translateCSS ($repo) {
 		var vendor = ['-moz-', '-webkit-', '-ms-', '-o-', ''],
-			data = $repo.data('translate'),
+			data = $repo.data('translate') || [],
 			center = Math.floor(($('.listRepos').outerWidth()-$repo.outerWidth())/2);
 
 		$.each(vendor, function (i, vendor) {
@@ -259,7 +260,7 @@
 
 				}	
 			});
-			createBar(languages, totalRepos);
+			createBar(languages, totalRepos, $('.meter'));
 			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 			$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
 			$('.card').find('.totalRepos').text(totalRepos);
@@ -276,7 +277,7 @@
 				bio =  info.bio || 'No description yet.',
 				created_at = formatDate(info.created_at),
 				company = info.company || '',
-				gravatar_link = 'http://www.gravatar.com/avatar/'+info.gravatar_id+'?s=160',
+				gravatar_link = 'http://www.gravatar.com/avatar/'+info.gravatar_id+'?s=120',
 				picture = $(document.createElement('img')).attr('src', gravatar_link);
 
 			if(info.message){
@@ -308,4 +309,4 @@
 
 
 	init();
-}(jQuery, window));
+// }(jQuery, window));

@@ -134,7 +134,7 @@ body:before {
 	border: 0;
 	display: block;
 	background-color: rgba(0, 0, 0, .2);
-	padding: 20px 20px 5px 20px;
+	padding: 10px 10px 5px 10px;
 	border-top: 1px solid rgba(0, 0, 0, 0.2);
 	box-shadow: 0 1px 2px rgba(255, 255, 255, .5), inset 0 1px 1px rgba(0, 0, 0, .3);
 	color:white;
@@ -177,7 +177,7 @@ body:before {
 
 
 .card .picture{
-	height: 160px;
+	height: 120px;
 	box-shadow: 0 1px 2px rgba(255, 255, 255, .6), inset 0 2px 1px rgba(0, 0, 0, .6);
 	border: 1px solid rgba(0, 0, 0, .2);
 	display: inline-block;
@@ -185,8 +185,8 @@ body:before {
 	border-radius: 3px;
 }
 .card .pictureWrapper{
-	height:160px;
-	margin-bottom: 10px;
+	height:120px;
+	margin-bottom: 5px;
 }
 .card .picture img{
 	position: relative;
@@ -194,15 +194,20 @@ body:before {
 	border-radius: 3px;
 }
 .card .name{
-    font-size: 1.5em;
+    font-size: 1.1em;
 
 }
 
 .card .nickname{
-    color: brown;
+    /*color: brown;*/
 	
     font-weight: bold;
-    font-size: 46px;
+    font-size: 1.5em;
+    color: rgba(0,0,0,.3);
+  text-shadow:0px 2px 2px rgba(255, 255, 255, 0.2);
+  -webkit-background-clip: text;
+     -moz-background-clip: text;
+          background-clip: text;
 }
 .meterWrapper{
 	position:relative;
