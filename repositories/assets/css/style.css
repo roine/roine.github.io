@@ -177,7 +177,7 @@ body:before {
 
 
 .card .picture{
-	height: 160px;
+	height: 120px;
 	box-shadow: 0 1px 2px rgba(255, 255, 255, .6), inset 0 2px 1px rgba(0, 0, 0, .6);
 	border: 1px solid rgba(0, 0, 0, .2);
 	display: inline-block;
@@ -185,7 +185,7 @@ body:before {
 	border-radius: 3px;
 }
 .card .pictureWrapper{
-	height:160px;
+	height:120px;
 	margin-bottom: 10px;
 }
 .card .picture img{
@@ -219,7 +219,9 @@ body:before {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	margin: 0;
-	overflow: hidden;
+	display:-webkit-flex;
+	display:flex;
+
 }
 .meter span{
   	text-indent: -9999px;

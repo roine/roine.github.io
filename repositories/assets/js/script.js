@@ -276,7 +276,7 @@
 				bio =  info.bio || 'No description yet.',
 				created_at = formatDate(info.created_at),
 				company = info.company || '',
-				gravatar_link = 'http://www.gravatar.com/avatar/'+info.gravatar_id+'?s=160',
+				gravatar_link = 'http://www.gravatar.com/avatar/'+info.gravatar_id+'?s=120',
 				picture = $(document.createElement('img')).attr('src', gravatar_link);
 
 			if(info.message){
