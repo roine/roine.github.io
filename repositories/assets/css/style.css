@@ -121,7 +121,7 @@ code, var, kbd, samp, tt, dir, listing, plaintext, xmp, abbr, acronym, blockquot
 	box-shadow: 8px 0 8px -1px rgba(0, 0, 0, .3) inset;
 }
 .btn:first-child.selected{
-	box-shadow: -8px 0 8px -1px rgba(0, 0, 0, .3) inset, inset 0px 1px 1px 0px rgba(0,0,0,.2), inset 0 -1px rgba(255,255,255,.7);
+	box-shadow: -8px 0 8px -1px rgba(0, 0, 0, .3) inset, inset 0px 1px 1px 0px rgba(0, 0, 0, .2);
 }
 
 .btn.blue{
@@ -179,6 +179,7 @@ code, var, kbd, samp, tt, dir, listing, plaintext, xmp, abbr, acronym, blockquot
 	padding: 0 20px;
 	box-shadow: none;
 	border: none;
+	overflow:hidden;
 }
 
 .card div[class^=col]{
@@ -194,11 +195,13 @@ code, var, kbd, samp, tt, dir, listing, plaintext, xmp, abbr, acronym, blockquot
 
 .card .picture{
 	height: 120px;
-	box-shadow: 0 1px 2px rgba(255, 255, 255, .6), inset 0 2px 1px rgba(0, 0, 0, .6);
+	box-shadow: 0 1px 2px rgba(255, 255, 255, 0.6), inset 0 2px 1px rgba(0, 0, 0, .3);
 	border: 1px solid rgba(0, 0, 0, .2);
 	display: inline-block;
 	-webkit-box-sizing: border-box;
 	border-radius: 3px;
+	overflow: hidden;
+	width: 120px;
 }
 .card .pictureWrapper{
 	height:120px;
@@ -210,14 +213,34 @@ code, var, kbd, samp, tt, dir, listing, plaintext, xmp, abbr, acronym, blockquot
 	position: relative;
 	z-index: -1;
 	border-radius: 3px;
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	-ms-transform: scale(1);
+	-o-transform: scale(1);
+	transform: scale(1);
+
+	-webkit-transition: all .5s ease-in-out;
+	-moz-transition: all .5s ease-in-out;
+	-ms-transition: all .5s ease-in-out;
+	-o-transition: all .5s ease-in-out;
+	transition: all .5s ease-in-out;
+}
+.card .picture:hover img{
+	
+    -webkit-transform: scale(1.2) translateY(10px);
+    -moz-transform: scale(1.2) translateY(10px);
+    -ms-transform: scale(1.2) translateY(10px);
+    -o-transform: scale(1.2) translateY(10px);
+    transform: scale(1.2) translateY(10px);
 }
 .card .name{
 	display:block;
     font-size: 1.1em;
-    background-color: rgba(0, 0, 0, .2);
+    
+	background-color: rgba(0, 0, 0, .1);
 	border-radius: 3px;
 	box-shadow: 0 1px 2px rgba(255, 255, 255, .2), inset 0 2px 1px rgba(0, 0, 0, .2);
-	color: #86A9B8;
+	color: white;
 	text-shadow: 0 1px rgba(0,0,0,.3), 0 2px rgba(0,0,0,.2);
 	-webkit-transition: color .5s ease-in-out;
 	-moz-transition: color .5s ease-in-out;
@@ -225,9 +248,7 @@ code, var, kbd, samp, tt, dir, listing, plaintext, xmp, abbr, acronym, blockquot
 	-o-transition: color .5s ease-in-out;
 	transition: color .5s ease-in-out;
 }
-.card .name:hover{
-	color:white;
-}
+
 .card .nickname{
     /*color: brown;*/
 	
@@ -248,19 +269,33 @@ code, var, kbd, samp, tt, dir, listing, plaintext, xmp, abbr, acronym, blockquot
 	width: 100%;
 	max-height: 200px;
 	text-align: justify;
+
 	-webkit-hyphens: auto;
 	-moz-hyphens: auto;
-	word-wrap: break-word;
 	-ms-hyphens: auto;
 	hyphens: auto;
+
+	word-wrap: break-word;
 	background: rgba(0, 0, 0, .1);
 	padding: 5px 10px;
 	border-radius: 3px;
 	box-shadow: 0 1px 2px rgba(255, 255, 255, .2), inset 0 2px 1px rgba(0, 0, 0, .2);
-	overflow: hidden;
+	overflow: auto;
 }
 .card .bio p{
 	margin:.5em 0;
+}
+
+::-webkit-scrollbar{
+	width: 10px;
+	background:rgba(0,0,0,.5);
+}
+::-webkit-scrollbar-thumb{
+	background:rgba(255,255,255,.3);
+	border-radius:2px;
+}
+::-webkit-scrollbar-thumb:hover{
+	background:rgba(255,255,255,.6);
 }
 i.empty{
 	color:#973B38;

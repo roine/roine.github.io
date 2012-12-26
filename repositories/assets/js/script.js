@@ -247,7 +247,7 @@
 
 			$.each(repos, function (index, repo) {
 				// only parse the non-forked repositories
-				if(!repo.fork) {
+				// if(!repo.fork) {
 					if(index < lastRepoOverviewMax){
 						lastRepoOverview(repo);
 					}
@@ -258,7 +258,7 @@
 					heightWrapper = translateCSS($repo);
 					totalRepos += 1;
 
-				}	
+				// }	
 			});
 			createBar(languages, totalRepos, $('.meter'));
 			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
@@ -284,14 +284,15 @@
 			var $box = $('.card'),
 				info = response.data,
 				custom_bio,
-				bio =  '<span class="about">About '+info.name+': </span>',
 				gravatar_link = 'http://www.gravatar.com/avatar/'+info.gravatar_id+'?s=120',
-				picture = $(document.createElement('img')).attr('src', gravatar_link);
+				picture = $(document.createElement('img')).attr('src', gravatar_link),
+				name = info.name || info.login,
+				bio =  '<span class="about">About '+name+': </span>';
 
-			custom_bio = info.name;
+			custom_bio = name;
 			custom_bio += (info.location) ? ' is a developer based in '+info.location : '';
 			custom_bio += (info.company) ? ' working for '+info.company+'.' : '.';
-			custom_bio += '<p>On Github <a href="'+info.html_url+'" target=_blank>'+info.name+'</a> has '+pluralize(info.public_repos,'repository', 'repositories');
+			custom_bio += '<p>On Github <a href="'+info.html_url+'" target=_blank>'+name+'</a> has '+pluralize(info.public_repos,'repository', 'repositories');
 			custom_bio += ' and is followed by '+pluralize(info.followers, 'user')+'.';
 			custom_bio += (info.blog) ? ' You could find furthermore informations on his/her blog, <a href="'+info.blog+'" target=_blank>'+info.blog+'</a>' : '';
 			custom_bio += (info.blog && info.email) ? ' or by emailing him/her directly <a href="mailto:'+info.email+'">'+info.email+'</a>.</p>' : '';
