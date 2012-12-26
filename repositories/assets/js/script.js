@@ -1,5 +1,5 @@
 
-(function ($, window) {
+// (function ($, window) {
 
 	'use strict';
 	/*jslint browser: true*/
@@ -39,8 +39,8 @@
 
 
 	// create a github's style bar
-	function createBar(obj, total){
-		var key, arr, width, sorted, lang, reposCount, sortable = [];
+	function createBar(obj, total, container){
+		var key, arr, width, sorted, lang, reposCount, $bar, sortable = [];
 		// sort by most use desc
 		for (lang in obj){
 			sortable.push([lang, obj[lang]])
@@ -55,14 +55,15 @@
 			width = (reposCount * 100) / total;
 
 			// create the span tag and append meter
-			$(document.createElement('span'))
+			$bar = $(document.createElement('span'))
 			.addClass(lang)
 			.text(reposCount)
-			.appendTo('.meter')
 			.animate({'width': width+'%'}, 'slow')
 			.css('background-color', languagesColor[lang.toLowerCase()])
-			.attr({'data-perc': Math.floor(width), 'data-repos':reposCount});
+			.attr({'data-perc': Math.floor(width), 'data-repos':reposCount})
+			.appendTo(container);
 		}
+		
 	}
 
 
@@ -120,7 +121,7 @@
 
 	// clean the repository name (replace dash and underscores by whitespace)
 	function cleanRepoName (str) {
-		return  str.replace(/_|-/g, ' ');	
+		return  str.replace(/_|-/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');	
 	}
 
 
@@ -173,7 +174,7 @@
 	// translate the boxes using css3 transform
 	function translateCSS ($repo) {
 		var vendor = ['-moz-', '-webkit-', '-ms-', '-o-', ''],
-			data = $repo.data('translate'),
+			data = $repo.data('translate') || [],
 			center = Math.floor(($('.listRepos').outerWidth()-$repo.outerWidth())/2);
 
 		$.each(vendor, function (i, vendor) {
@@ -259,36 +260,52 @@
 
 				}	
 			});
-			createBar(languages, totalRepos);
+			createBar(languages, totalRepos, $('.meter'));
 			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 			$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
-			$('.card').find('.totalRepos').text(totalRepos);
 			
 		});
 	}
 
+	function pluralize(num, str, suggestion){
+		if(suggestion){
+			return (num > 1) ? num+' '+suggestion : num+' '+str;
+		}
+		else
+			return (num > 1) ? num+' '+str+'s' : num+' '+str;
+	}
 
 	// Fetch the data about the current user using getJSON
 	function getUserInfos(){
 		$.getJSON('https://api.github.com/users/'+user+'?callback=?', function (response) {
+
+			if(response.message){
+				alert(response.message);
+				return;
+			}
+
 			var $box = $('.card'),
 				info = response.data,
-				bio =  info.bio || 'No description yet.',
-				created_at = formatDate(info.created_at),
-				company = info.company || '',
+				custom_bio,
+				bio =  '<span class="about">About '+info.name+': </span>',
 				gravatar_link = 'http://www.gravatar.com/avatar/'+info.gravatar_id+'?s=120',
 				picture = $(document.createElement('img')).attr('src', gravatar_link);
 
-			if(info.message){
-				alert(repos.message)
-			}
+			custom_bio = info.name;
+			custom_bio += (info.location) ? ' is a developer based in '+info.location : '';
+			custom_bio += (info.company) ? ' working for '+info.company+'.' : '.';
+			custom_bio += '<p>On Github <a href="'+info.html_url+'" target=_blank>'+info.name+'</a> has '+pluralize(info.public_repos,'repository', 'repositories');
+			custom_bio += ' and is followed by '+pluralize(info.followers, 'user')+'.';
+			custom_bio += (info.blog) ? ' You could find furthermore informations on his/her blog, <a href="'+info.blog+'" target=_blank>'+info.blog+'</a>' : '';
+			custom_bio += (info.blog && info.email) ? ' or by emailing him/her directly <a href="mailto:'+info.email+'">'+info.email+'</a>.</p>' : '';
+			custom_bio += (!info.blog && info.email) ? ' You could send him an email for further informations, <a href="mailto:'+info.email+'">'+info.email+'</a>.</p>' : '</p>';
+			custom_bio += (info.hireable) ? '<p>And the good news is that he is up to be hired.</p>' : '';
 
-
+			bio += info.bio || custom_bio;
+			console.log(bio)
 			$box.find('.name').text(info.name).end()
 				.find('.nickname').text(info.login).end()
-				.find('.bio').text(bio).end()
-				.find('.created').text(created_at).end()
-				.find('.company').text(company).end()
+				.find('.bio').html(bio).end()
 				.find('.picture').append(picture)
 				;
 			$('.preload').removeClass('preload')
@@ -308,4 +325,4 @@
 
 
 	init();
-}(jQuery, window));
+// }(jQuery, window));
