@@ -6,7 +6,7 @@ html, body{
 }
 a{
 	text-decoration:none;
-	color:teal;
+	color: rgb(212, 212, 236);
 }
 a:focus{
 	outline:none;
@@ -153,7 +153,7 @@ code, var, kbd, samp, tt, dir, listing, plaintext, xmp, abbr, acronym, blockquot
 	border-top: 1px solid rgba(0, 0, 0, 0.2);
 	box-shadow: 0 1px 2px rgba(255, 255, 255, .5), inset 0 1px 1px rgba(0, 0, 0, .3);
 	color:white;
-	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
 	margin: 20px 0;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
@@ -169,6 +169,9 @@ code, var, kbd, samp, tt, dir, listing, plaintext, xmp, abbr, acronym, blockquot
 	-ms-transition: all 1s ease;
 	-o-transition: all 1s ease;
 	transition: all 1s ease;
+}
+.card a{
+	color:#D4D4EC;
 }
 
 .card.preload{
@@ -211,9 +214,20 @@ code, var, kbd, samp, tt, dir, listing, plaintext, xmp, abbr, acronym, blockquot
 .card .name{
 	display:block;
     font-size: 1.1em;
-
+    background-color: rgba(0, 0, 0, .2);
+	border-radius: 3px;
+	box-shadow: 0 1px 2px rgba(255, 255, 255, .2), inset 0 2px 1px rgba(0, 0, 0, .2);
+	color: #86A9B8;
+	text-shadow: 0 1px rgba(0,0,0,.3), 0 2px rgba(0,0,0,.2);
+	-webkit-transition: color .5s ease-in-out;
+	-moz-transition: color .5s ease-in-out;
+	-ms-transition: color .5s ease-in-out;
+	-o-transition: color .5s ease-in-out;
+	transition: color .5s ease-in-out;
 }
-
+.card .name:hover{
+	color:white;
+}
 .card .nickname{
     /*color: brown;*/
 	

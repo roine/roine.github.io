@@ -268,11 +268,8 @@
 	}
 
 	function pluralize(num, str, suggestion){
-		if(suggestion){
-			return (num > 1) ? num+' '+suggestion : num+' '+str;
-		}
-		else
-			return (num > 1) ? num+' '+str+'s' : num+' '+str;
+		if(!suggestion) suggestion = str+'s';
+		return (num > 1) ? num+' '+suggestion : num+' '+str;
 	}
 
 	// Fetch the data about the current user using getJSON
