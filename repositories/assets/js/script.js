@@ -260,6 +260,7 @@
 
 			if(repos.message){
 				alert(repos.message);
+				return;
 			}
 			else if(repos.message === "Not Found" || !repos.length){
 				return;
@@ -336,11 +337,23 @@
 
 	// constructor
 	function init(){
+
+		var colorz = ['red', 'blue', 'orange'];
+		var i = 0;
+		$('.help .button').click(function(){
+			i++;
+			if(i >= colorz.length){
+				i = 0;
+			}
+			$('.btn').removeClass().addClass('btn '+colorz[i])
+			return false;
+		});
 		getUserInfos();
 		getRepos();
 		
 		// event Listeners
 		$('.sort').on('click', 'a', sortHandler);
+		
 	}
 	// end init
 
