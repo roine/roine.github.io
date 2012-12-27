@@ -11,10 +11,6 @@ a:focus {
 	outline: none;
 }
 
-body {
-	background-color: #A2D9F0;
-	margin: 0;
-}
 
 body:before {
 	position: fixed;
@@ -30,11 +26,18 @@ body:before {
 }
 
 body {
+	color:  background-color: #A2D9F0; margin: 0;
 	-moz-hyphens: auto;
 	-ms-hyphens: auto;
 	-webkit-hyphens: auto;
 	hyphens: auto;
 	word-wrap: break-word;
+
+	background-color: #A2D9F0;
+	margin: 0;
+
+	font-family: "Open Sans", Arial, sans-serif;
+	font-weight: 400;
 }
 
 code,var,kbd,samp,tt,dir,listing,plaintext,xmp,abbr,acronym,blockquote,q {
@@ -386,10 +389,11 @@ i.empty {
 	color: brown;
 	text-align: center;
 	border-radius: 3px;
+	padding: 15px 0;
 
 	-webkit-box-shadow: 0 0 5px rgba(0,0,0,.5);
 	box-shadow: 0 0 5px rgba(0,0,0,.5);
-	padding: 15px 0;
+
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	filter: alpha(opacity=100);
 	opacity: 1;

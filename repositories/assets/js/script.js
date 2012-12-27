@@ -1,5 +1,5 @@
 
-// (function ($, window) {
+(function ($, window) {
 
 	'use strict';
 	/*jslint browser: true*/
@@ -43,12 +43,17 @@
 		var key, arr, width, sorted, lang, reposCount, $bar, sortable = [];
 		// sort by most use desc
 		for (lang in obj){
-			sortable.push([lang, obj[lang]])
+			if(obj.hasOwnProperty(lang)){
+				sortable.push([lang, obj[lang]]);
+			}	
 		}
 		    
-		sorted = sortable.sort(function(a, b){return (a[1]-b[1]) * -1});
+		sorted = sortable.sort(function(a, b){return (a[1]-b[1]) * -1; });
 
 		for(key in sorted){
+			if(!sorted.hasOwnProperty(key)){ 
+				continue; 
+			}
 			// modify the following data before displaying it
 			lang = sorted[key][0];
 			reposCount = sorted[key][1];
@@ -177,13 +182,29 @@
 			data = $repo.data('translate') || [],
 			center = Math.floor(($('.listRepos').outerWidth()-$repo.outerWidth())/2);
 
-		$.each(vendor, function (i, vendor) {
-			$repo.css(vendor+'transform', 'translate('+center+'px,'+data[1]+'px)');
-		});
-
-		return data[1];
+		if(transformSupport()){
+			$.each(vendor, function (i, vendor) {
+				$repo.css(vendor+'transform', 'translate('+center+'px,'+data[1]+'px)');
+			});
+			return data[1];
+		}
+		// fallback jQuery
+		else{
+			$repo.css('position', 'absolute').animate({'top': data[1]+'px', 'left': center+'px'});
+		}
+		
 	}
 
+	function transformSupport(){
+		var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
+		el = document.createElement('div'),
+		support=0;
+
+		while( support !== true ){
+			support = document.createElement('div').style[prefixes[support++]] !== undefined || support;
+		}
+		return support;
+	}
 
 	// click on sort button event handler
 	function sortHandler(){
@@ -238,7 +259,7 @@
 				$repo;
 
 			if(repos.message){
-				alert(repos.message)
+				alert(repos.message);
 			}
 			else if(repos.message === "Not Found" || !repos.length){
 				return;
@@ -263,13 +284,15 @@
 			createBar(languages, totalRepos, $('.meter'));
 			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 			$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
-			if($('.reposCount').length) $('.reposCount').text(pluralize(totalRepos, 'repository', 'repositories'));
+			if($('.reposCount').length) { 
+				$('.reposCount').text(pluralize(totalRepos, 'repository', 'repositories'));
+			}
 			
 		});
 	}
 
 	function pluralize(num, str, suggestion){
-		if(!suggestion) suggestion = str+'s';
+		if(!suggestion) { suggestion = str+'s'; }
 		return (num > 1) ? num+' '+suggestion : num+' '+str;
 	}
 
@@ -301,13 +324,12 @@
 			custom_bio += (info.hireable) ? '<p>And the good news is that he is up to be hired.</p>' : '';
 
 			bio += info.bio || custom_bio;
-			console.log(bio)
 			$box.find('.name').text(info.name).end()
 				.find('.nickname').text(info.login).end()
 				.find('.bio').html(bio).end()
 				.find('.picture').append(picture)
 				;
-			$('.preload').removeClass('preload')
+			$('.preload').removeClass('preload');
 		});
 	}
 
@@ -324,4 +346,4 @@
 
 
 	init();
-// }(jQuery, window));
+}(jQuery, window));
