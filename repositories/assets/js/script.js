@@ -9,7 +9,7 @@
 	/* prototypes */
 
 
-	/* 
+	/* *********************************************************************************
 	 * sort_by to automatically sort at first loading
 	 * translate init to 0 for boxes position
 	 * margin is the space between the boxes
@@ -17,7 +17,7 @@
 	 * customUser is the custom user passed in the url hash
 	 * user is default user login 'roine'
 	 * lastRepoOverviewMax define the max number of repositories to display in overview
-	*/
+	 **********************************************************************************/
 	var sort_by = 'updated',
 		translate = 0,
 		margin = 20,
@@ -36,6 +36,58 @@
 			'python':'#3581BA',
 			'objective-c':'#438EFF'
 		};
+
+
+	/***********
+	 *
+	 * Helpers
+	 *
+	 **********/
+
+	// simple pluralize, add s if necessary
+	function pluralize(num, str, suggestion){
+		if(!suggestion) { suggestion = str+'s'; }
+		return (num > 1) ? num+' '+suggestion : num+' '+str;
+	}
+
+
+	// check whether css transform is available
+	function transformSupport(){
+		var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
+		el = document.createElement('div'),
+		support=0;
+
+		while( support !== true ){
+			support = document.createElement('div').style[prefixes[support++]] !== undefined || support;
+		}
+		return support;
+	}
+
+
+	// prettify the space between two date
+	function timespace(rawDate){
+		var date, seconds, formats, i = 0, f;
+        date = new Date(rawDate);
+        seconds = (new Date() - date) / 1000;
+        formats = [
+            [60, 'seconds', 1],
+            [120, '1 minute ago'],
+            [3600, 'minutes', 60],
+            [7200, '1 hour ago'],
+            [86400, 'hours', 3600],
+            [172800, 'Yesterday'],
+            [604800, 'days', 86400],
+            [1209600, '1 week ago'],
+            [2678400, 'weeks', 604800]
+        ];
+
+        while (f = formats[i ++]) {
+            if (seconds < f[0]) {
+                return f[2] ? Math.floor(seconds / f[2]) + ' ' + f[1] + ' ago' :  f[1];
+            }
+        }
+        return 'A while ago';
+	}
 
 
 	// create a github's style bar
@@ -72,41 +124,6 @@
 	}
 
 
-	// prettify the space between two date
-	function timespace(rawDate){
-		var date, seconds, formats, i = 0, f;
-        date = new Date(rawDate);
-        seconds = (new Date() - date) / 1000;
-        formats = [
-            [60, 'seconds', 1],
-            [120, '1 minute ago'],
-            [3600, 'minutes', 60],
-            [7200, '1 hour ago'],
-            [86400, 'hours', 3600],
-            [172800, 'Yesterday'],
-            [604800, 'days', 86400],
-            [1209600, '1 week ago'],
-            [2678400, 'weeks', 604800]
-        ];
-
-        while (f = formats[i ++]) {
-            if (seconds < f[0]) {
-                return f[2] ? Math.floor(seconds / f[2]) + ' ' + f[1] + ' ago' :  f[1];
-            }
-        }
-        return 'A while ago';
-	}
-
-
-	// display an overview of the last updated repositories
-	function lastRepoOverview(repo){
-		var item = $(document.createElement('li'))
-		.text(cleanRepoName(repo.name)+' ('+timespace(repo.updated_at)+')');
-
-		$('.lastRepos').append(item);
-	}
-
-
 	// format the date like following dd mm yyyy, i.e: 18 January 2000
 	function formatDate(date){
 		var dDate = new Date(date),
@@ -127,6 +144,26 @@
 	// clean the repository name (replace dash and underscores by whitespace)
 	function cleanRepoName (str) {
 		return  str.replace(/_|-/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');	
+	}
+
+
+
+
+
+
+	/********************************************************
+	 *
+	 * The functions below are dependant to the fetched datas
+	 *
+	 ********************************************************/
+
+
+	// display an overview of the last updated repositories
+	function lastRepoOverview(repo){
+		var item = $(document.createElement('li'))
+		.text(cleanRepoName(repo.name)+' ('+timespace(repo.updated_at)+')');
+
+		$('.lastRepos').append(item);
 	}
 
 
@@ -194,6 +231,17 @@
 		return data[1];
 	}
 
+
+
+
+
+	/******************
+	 *
+	 * Event Handlers
+	 *
+	 *****************/
+
+
 	// click on sort button event handler
 	function sortHandler(){
 		var that = this,
@@ -238,6 +286,16 @@
 
 
 
+
+
+
+	/************
+	 *
+	 * Ajax calls
+	 *
+	 ************/
+
+
 	// Fetch the repositories of a user using getJSON
 	function getRepos(){
 		$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
@@ -272,6 +330,8 @@
 						// translate and return the height
 						heightWrapper = translateCSS($repo);
 						totalRepos += 1;
+
+						// add some effect to each repo while hovering
 						$repo.hover(function(){
 							$(this).css('border-bottom', '10px solid '+languagesColor[repo.language.toLowerCase()]);
 						}, function(){
@@ -279,9 +339,8 @@
 						});
 
 					}	
-
 				});
-				
+
 				createBar(languages, totalRepos, $('.meter'));
 				$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 				$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
@@ -333,44 +392,28 @@
 	// constructor
 	function init(){
 
-		var colorz = ['red', 'blue', 'orange'];
+		var colorz = ['blue', 'red', 'orange'];
 		var i = 0;
 		$('.help .button').click(function(){
-			i++;
-			if(i >= colorz.length){
+			if(++i == colorz.length){
 				i = 0;
 			}
-			var $selected = $('.selected')
-			$('.btn').removeClass().addClass('btn '+colorz[i])
-			$selected.addClass('selected')
+			// cache the selected button
+			var $selected = $('.selected');
+			$('.btn').removeClass().addClass('btn '+colorz[i]);
+			$selected.addClass('selected');
 			return false;
 		});
+
+		// fetch the informations about the user
 		getUserInfos();
+
+		// fetch the repositories of the user
 		getRepos();
 		
 		// event Listeners
 		$('.sort').on('click', 'a', sortHandler);
 		
-	}
-	// end init
-
-	// helpers
-	// simple pluralize, add s if necessary
-	function pluralize(num, str, suggestion){
-		if(!suggestion) { suggestion = str+'s'; }
-		return (num > 1) ? num+' '+suggestion : num+' '+str;
-	}
-
-	// check whether css transform is available
-	function transformSupport(){
-		var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
-		el = document.createElement('div'),
-		support=0;
-
-		while( support !== true ){
-			support = document.createElement('div').style[prefixes[support++]] !== undefined || support;
-		}
-		return support;
 	}
 
 	init();
