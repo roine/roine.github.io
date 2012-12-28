@@ -33,7 +33,7 @@ body {
 	hyphens: auto;
 	word-wrap: break-word;
 
-	background-color: #A2D9F0;
+	background-color: #49596D;
 	margin: 0;
 
 	font-family: "Open Sans", Arial, sans-serif;
@@ -151,7 +151,7 @@ EWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRk
 }
 /* red button */
 .btn.red{
-	background-color: #A53539;
+	background-color: #CE3B40;
 }
 .btn.red:not(.selected):hover{
 	background-color: #D3454A;
@@ -170,7 +170,7 @@ EWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRk
 /* orange button */
 
 .btn.orange{
-	background-color: #B9543C;
+	background-color: #E66A4D;
 }
 .btn.orange:not(.selected):hover{
 	background-color: #D66449;
@@ -211,7 +211,7 @@ EWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRk
 	height: auto;
 	border: 0;
 	display: block;
-	background-color: rgba(0, 0, 0, .2);
+	background-color: rgba(0,0,0,.2);
 	padding: 10px 10px 10px 10px;
 	border-top: 1px solid rgba(0, 0, 0, 0.2);
 
@@ -325,17 +325,19 @@ EWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRk
 	-o-transition: color .5s ease-in-out;
 	-ms-transition: color .5s ease-in-out;
 	transition: color .5s ease-in-out;
+	margin: 2px 0;
+	padding: 2px 0;
 }
 
 .card .nickname {
 	font-weight: bold;
 	font-size: 1.5em;
-	color: rgba(0,0,0,.3);
-	text-shadow: 0px 2px 2px rgba(255, 255, 255, 0.2);
+	color: white;
 
 	-webkit-background-clip: text;
 	-moz-background-clip: text;
 	background-clip: text;
+	text-transform: ca;
 }
 
 .card .about {
@@ -479,15 +481,18 @@ i.empty {
 	min-height: 100px;
 	padding: 10px 20px;
 	width: 90%;
-	border: 1px solid rgba(0,0,0,.5);
+	border: 1px solid rgba(0, 0, 0, .5);
 	border-radius: 5px;
 	background: white;
 
-	-webkit-transition: all 1s ease;
-	-moz-transition: all 1s ease;
-	-o-transition: all 1s ease;
-	-ms-transition: all 1s ease;
-	transition: all 1s ease;
+	-webkit-transition: -webkit-transform 1.5s ease, border-bottom .2s ease;
+	-moz-transition: -moz-transform 1.5s ease, border-bottom .2s ease;
+	-o-transition: -o-transform 1.5s ease, border-bottom .2s ease;
+	-ms-transition: -ms-transform 1.5s ease, border-bottom .2s ease;
+	transition: transform 1.5s ease, border-bottom .2s ease;
+}
+.repo:hover{
+	border-bottom: 10px solid #D66449;
 }
 
 .repo .details {

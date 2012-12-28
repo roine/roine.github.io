@@ -220,7 +220,8 @@
 		// remove the bold to all link into sort
 		$('.sort a, .details .selected').removeClass('selected');
 		// add bold to the current link
-		$(that).add('.repos .details .'+sortBy).addClass('selected');
+
+		$(that).add('.listRepos .details .'+sortBy).addClass('selected');
 
 		function sortFn ( alpha, beta ) {
             var a = $.data(alpha, 'sort')[sortBy],
@@ -248,6 +249,7 @@
 	}
 
 
+
 	// Fetch the repositories of a user using getJSON
 	function getRepos(){
 		$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
@@ -262,9 +264,6 @@
 				alert(repos.message);
 				return;
 			}
-			else if(repos.message === "Not Found" || !repos.length){
-				return;
-			}
 
 
 			$.each(repos, function (index, repo) {
@@ -273,13 +272,18 @@
 					if(index < lastRepoOverviewMax){
 						lastRepoOverview(repo);
 					}
+					// count each language
 					if(typeof languages[repo.language] === 'undefined') { languages[repo.language] = 0; } 
 						languages[repo.language] += 1;
 
 					$repo = createRepoBox(repo);
 					heightWrapper = translateCSS($repo);
 					totalRepos += 1;
-
+					$repo.hover(function(){
+						$(this).css('border-bottom', '10px solid '+languagesColor[repo.language.toLowerCase()]);
+					}, function(){
+						$(this).css('border-bottom', '');
+					});
 				}	
 			});
 			createBar(languages, totalRepos, $('.meter'));
@@ -345,7 +349,9 @@
 			if(i >= colorz.length){
 				i = 0;
 			}
+			var $selected = $('.selected')
 			$('.btn').removeClass().addClass('btn '+colorz[i])
+			$selected.addClass('selected')
 			return false;
 		});
 		getUserInfos();

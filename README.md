@@ -9,7 +9,7 @@ Also could be used that way
 
 	roine.github.com/repositories#username
 
-Where username is a existing user name, exemple:
+Where username is a existing user name, example:
 
 [roine.github.com/repositories#twitter](http://roine.github.com/repositories#twitter)
 
