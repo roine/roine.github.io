@@ -186,24 +186,12 @@
 			$.each(vendor, function (i, vendor) {
 				$repo.css(vendor+'transform', 'translate('+center+'px,'+data[1]+'px)');
 			});
-			return data[1];
 		}
-		// fallback jQuery
+		// fallback jQuery, untested
 		else{
 			$repo.css('position', 'absolute').animate({'top': data[1]+'px', 'left': center+'px'});
 		}
-		
-	}
-
-	function transformSupport(){
-		var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
-		el = document.createElement('div'),
-		support=0;
-
-		while( support !== true ){
-			support = document.createElement('div').style[prefixes[support++]] !== undefined || support;
-		}
-		return support;
+		return data[1];
 	}
 
 	// click on sort button event handler
@@ -262,43 +250,46 @@
 
 			if(repos.message){
 				alert(repos.message);
-				return;
 			}
+			else{
+				$.each(repos, function (index, repo) {
 
-
-			$.each(repos, function (index, repo) {
 				// only parse the non-forked repositories
-				if(!repo.fork) {
-					if(index < lastRepoOverviewMax){
-						lastRepoOverview(repo);
-					}
-					// count each language
-					if(typeof languages[repo.language] === 'undefined') { languages[repo.language] = 0; } 
-						languages[repo.language] += 1;
+					if(!repo.fork) {
 
-					$repo = createRepoBox(repo);
-					heightWrapper = translateCSS($repo);
-					totalRepos += 1;
-					$repo.hover(function(){
-						$(this).css('border-bottom', '10px solid '+languagesColor[repo.language.toLowerCase()]);
-					}, function(){
-						$(this).css('border-bottom', '');
-					});
-				}	
-			});
-			createBar(languages, totalRepos, $('.meter'));
-			$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
-			$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
-			if($('.reposCount').length) { 
-				$('.reposCount').text(pluralize(totalRepos, 'repository', 'repositories'));
+						// take the x last updated repo and display it in an overview
+						if(index < lastRepoOverviewMax){
+							lastRepoOverview(repo);
+						}
+
+						// count each language, populate it like {'javascript':13, 'php': 1}
+						if(typeof languages[repo.language] === 'undefined') { languages[repo.language] = 0; } 
+							languages[repo.language] += 1;
+
+						// create the boxes for each repostories
+						$repo = createRepoBox(repo);
+
+						// translate and return the height
+						heightWrapper = translateCSS($repo);
+						totalRepos += 1;
+						$repo.hover(function(){
+							$(this).css('border-bottom', '10px solid '+languagesColor[repo.language.toLowerCase()]);
+						}, function(){
+							$(this).css('border-bottom', '');
+						});
+
+					}	
+
+				});
+				
+				createBar(languages, totalRepos, $('.meter'));
+				$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
+				$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
+				if($('.reposCount').length) { 
+					$('.reposCount').text(pluralize(totalRepos, 'repository', 'repositories'));
+				}
 			}
-			
 		});
-	}
-
-	function pluralize(num, str, suggestion){
-		if(!suggestion) { suggestion = str+'s'; }
-		return (num > 1) ? num+' '+suggestion : num+' '+str;
 	}
 
 	// Fetch the data about the current user using getJSON
@@ -307,7 +298,7 @@
 
 			if(response.message){
 				alert(response.message);
-				return;
+				
 			}
 
 			var $box = $('.card'),
@@ -363,6 +354,24 @@
 	}
 	// end init
 
+	// helpers
+	// simple pluralize, add s if necessary
+	function pluralize(num, str, suggestion){
+		if(!suggestion) { suggestion = str+'s'; }
+		return (num > 1) ? num+' '+suggestion : num+' '+str;
+	}
+
+	// check whether css transform is available
+	function transformSupport(){
+		var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
+		el = document.createElement('div'),
+		support=0;
+
+		while( support !== true ){
+			support = document.createElement('div').style[prefixes[support++]] !== undefined || support;
+		}
+		return support;
+	}
 
 	init();
 }(jQuery, window));
