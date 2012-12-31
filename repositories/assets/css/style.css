@@ -305,11 +305,11 @@ EWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRk
 }
 
 .card .picture:hover img {
-	-webkit-transform: scale(1.5) translateY(20px);
-	-moz-transform: scale(1.5) translateY(20px);
-	-o-transform: scale(1.5) translateY(20px);
-	-ms-transform: scale(1.5) translateY(20px);
-	transform: scale(1.5) translateY(20px);
+	-webkit-transform: scale(1.2) translateY(10px);
+	-moz-transform: scale(1.2) translateY(10px);
+	-o-transform: scale(1.2) translateY(10px);
+	-ms-transform: scale(1.2) translateY(10px);
+	transform: scale(1.2) translateY(10px);
 }
 
 .card .name {
@@ -481,7 +481,7 @@ i.empty {
 	background: radial-gradient(center,ellipse cover,rgba(255, 255, 255, 0.8) 0,rgba(255, 255, 255, 0) 70%);
 }
 
-.listRepos .ribbon{
+.listRepos .language{
     padding: 10px;
 
     position: absolute;
