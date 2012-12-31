@@ -137,6 +137,11 @@
 	function createRepoBox (repo) {
 		var homepage = repo.homepage || repo.html_url,
 
+			ribbon = $(document.createElement('div'))
+			.addClass('ribbon')
+			.text(repo.language)
+			.css('background-color', languagesColor[repo.language.toLowerCase()]),
+
 			leftMenu = $(document.createElement('div'))
 			.addClass('details'),
 
@@ -170,6 +175,7 @@
 			})
 			.addClass('repo drop-shadow')
 			.append(leftMenu)
+			.append(ribbon)
 			.appendTo('.listRepos');
 
 		
@@ -403,7 +409,6 @@
 			$selected.addClass('selected');
 			return false;
 		});
-
 
 		// fetch the informations about the user
 		getUserInfos();
