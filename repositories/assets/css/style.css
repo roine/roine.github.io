@@ -4,7 +4,7 @@ html,body {
 
 a {
 	text-decoration: none;
-	color: rgb(212, 212, 236);
+	color: white;
 }
 
 a:focus {
@@ -237,7 +237,7 @@ EWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRk
 }
 
 .card a {
-	color: #D4D4EC;
+	text-shadow: 0 2px black;
 }
 
 .card.preload {
@@ -361,6 +361,10 @@ EWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRk
 	-webkit-box-shadow: 0 1px 2px rgba(255, 255, 255, .2), inset 0 2px 1px rgba(0, 0, 0, .2);
 	box-shadow: 0 1px 2px rgba(255, 255, 255, .2), inset 0 2px 1px rgba(0, 0, 0, .2);
 	overflow: auto;
+	vertical-align: baseline;
+	font-size: 14px;
+	outline: 0;
+	line-height: 17px;
 }
 
 .card .bio p {

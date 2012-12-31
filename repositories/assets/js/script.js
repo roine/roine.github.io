@@ -90,40 +90,6 @@
 	}
 
 
-	// create a github's style bar
-	function createBar(obj, total, container){
-		var key, arr, width, sorted, lang, reposCount, $bar, sortable = [];
-		// sort by most use desc
-		for (lang in obj){
-			if(obj.hasOwnProperty(lang)){
-				sortable.push([lang, obj[lang]]);
-			}	
-		}
-		    
-		sorted = sortable.sort(function(a, b){return (a[1]-b[1]) * -1; });
-
-		for(key in sorted){
-			if(!sorted.hasOwnProperty(key)){ 
-				continue; 
-			}
-			// modify the following data before displaying it
-			lang = sorted[key][0];
-			reposCount = sorted[key][1];
-			width = (reposCount * 100) / total;
-
-			// create the span tag and append meter
-			$bar = $(document.createElement('span'))
-			.addClass(lang)
-			.text(reposCount)
-			.animate({'width': width+'%'}, 'slow')
-			.css('background-color', languagesColor[lang.toLowerCase()])
-			.attr({'data-perc': Math.floor(width), 'data-repos':reposCount})
-			.appendTo(container);
-		}
-		
-	}
-
-
 	// format the date like following dd mm yyyy, i.e: 18 January 2000
 	function formatDate(date){
 		var dDate = new Date(date),
@@ -231,6 +197,38 @@
 		return data[1];
 	}
 
+
+	// create a github's style bar
+	function createBar(obj, total, container){
+		var key, arr, width, sorted, lang, reposCount, $bar, sortable = [];
+		// sort by most use desc
+		for (lang in obj){
+			if(obj.hasOwnProperty(lang)){
+				sortable.push([lang, obj[lang]]);
+			}	
+		}
+		    
+		sorted = sortable.sort(function(a, b){return (a[1]-b[1]) * -1; });
+
+		for(key in sorted){
+			if(sorted.hasOwnProperty(key)){ 
+				// modify the following data before displaying it
+				lang = sorted[key][0];
+				reposCount = sorted[key][1];
+				width = (reposCount * 100) / total;
+
+				// create the span tag and append meter
+				$bar = $(document.createElement('span'))
+				.addClass(lang)
+				.text(reposCount)
+				.animate({'width': width+'%'}, 'slow')
+				.css('background-color', languagesColor[lang.toLowerCase()])
+				.attr({'data-perc': Math.floor(width), 'data-repos':reposCount})
+				.appendTo(container);
+			}
+		}
+		
+	}
 
 
 
@@ -392,10 +390,11 @@
 	// constructor
 	function init(){
 
-		var colorz = ['blue', 'red', 'orange'];
-		var i = 0;
+		// to remove after dev @remove
+		var colorz = ['blue', 'red', 'orange'],
+			i = 0;
 		$('.help .button').click(function(){
-			if(++i == colorz.length){
+			if(++i === colorz.length){
 				i = 0;
 			}
 			// cache the selected button
@@ -404,6 +403,7 @@
 			$selected.addClass('selected');
 			return false;
 		});
+
 
 		// fetch the informations about the user
 		getUserInfos();
