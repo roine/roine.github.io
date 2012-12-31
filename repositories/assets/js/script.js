@@ -1,4 +1,25 @@
-
+/*
+ * @@helpers 
+ * @pluralize //add s at end of word if it count more than 1
+ * @canCssTransform // check whether css transform is supported by the current browser
+ * @timespace // the space between two dates
+ * @formatDate // format the date for human
+ * @cleanRepoName //clean the name of the repositories by removing - _
+ *
+ * @@contentExploit
+ * @lastRepo // Display the last updated repositories
+ * @createRepoBox // create the html boxes for each repositories
+ * @translateBox // translate the boxes using css transform with jQuery animate fallback
+ * @createLangBar // create the html bar with all the languages horizontaly stacked
+ *
+ * @@EventCallback
+ * @sort
+ *
+ * @@Ajax
+ * @getRepos
+ * @getUser
+ *
+ */
 (function ($, window) {
 
 	'use strict';
@@ -24,24 +45,25 @@
 		sortDir = -1,
 		customUser = window.location.hash.substring(1),
 		user = customUser || 'roine',
-		lastRepoOverviewMax = 2,
+		lastRepoOverviewMax = 3,
 		// https://raw.github.com/doda/github-language-colors/master/colors.json
 		languagesColor = {"Arduino": "#bd79d1", "Java": "#b07219", "VHDL": "#543978", "Scala": "#7dd3b0", "Emacs Lisp": "#c065db", "Delphi": "#b0ce4e", "Ada": "#02f88c", "VimL": "#199c4b", "Perl": "#0298c3", "Lua": "#fa1fa1", "Rebol": "#358a5b", "Verilog": "#848bf3", "Factor": "#636746", "Ioke": "#078193", "R": "#198ce7", "Erlang": "#949e0e", "Nu": "#c9df40", "AutoHotkey": "#6594b9", "Clojure": "#db5855", "Shell": "#5861ce", "Assembly": "#a67219", "Parrot": "#f3ca0a", "C#": "#555", "Turing": "#45f715", "AppleScript": "#3581ba", "Eiffel": "#946d57", "Common Lisp": "#3fb68b", "Dart": "#cccccc", "SuperCollider": "#46390b", "CoffeeScript": "#244776", "XQuery": "#2700e2", "Haskell": "#29b544", "Racket": "#ae17ff", "Elixir": "#6e4a7e", "HaXe": "#346d51", "Ruby": "#701516", "Self": "#0579aa", "Fantom": "#dbded5", "Groovy": "#e69f56", "C": "#555", "JavaScript": "#f15501", "D": "#fcd46d", "ooc": "#b0b77e", "C++": "#f34b7d", "Dylan": "#3ebc27", "Nimrod": "#37775b", "Standard ML": "#dc566d", "Objective-C": "#f15501", "Nemerle": "#0d3c6e", "Mirah": "#c7a938", "Boo": "#d4bec1", "Objective-J": "#ff0c5a", "Rust": "#dea584", "Prolog": "#74283c", "Ecl": "#8a1267", "Gosu": "#82937f", "FORTRAN": "#4d41b1", "ColdFusion": "#ed2cd6", "OCaml": "#3be133", "Fancy": "#7b9db4", "Pure Data": "#f15501", "Python": "#3581ba", "Tcl": "#e4cc98", "Arc": "#ca2afe", "Puppet": "#cc5555", "Io": "#a9188d", "Max": "#ce279c", "Go": "#8d04eb", "ASP": "#6a40fd", "Visual Basic": "#945db7", "PHP": "#6e03c1", "Scheme": "#1e4aec", "Vala": "#3581ba", "Smalltalk": "#596706", "Matlab": "#bb92ac"};
 
 	/***********
 	 *
-	 * Helpers
+	 * Helpers - @@helpers
 	 *
 	 **********/
 
-	// simple pluralize, add s if necessary
+
+	// simple pluralize, add s if necessary - @pluralize
 	function pluralize(num, str, suggestion){
 		if(!suggestion) { suggestion = str+'s'; }
 		return (num > 1) ? num+' '+suggestion : num+' '+str;
 	}
 
 
-	// check whether css transform is available
+	// check whether css transform is available - @canCssTransform
 	function transformSupport(){
 		var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
 		el = document.createElement('div'),
@@ -54,7 +76,7 @@
 	}
 
 
-	// prettify the space between two date
+	// prettify the space between two date - @timespace
 	function timespace(rawDate){
 		var date, seconds, formats, i = 0, f;
         date = new Date(rawDate);
@@ -80,7 +102,7 @@
 	}
 
 
-	// format the date like following dd mm yyyy, i.e: 18 January 2000
+	// format the date like following dd mm yyyy, i.e: 18 January 2000 - @formatDate
 	function formatDate(date){
 		var dDate = new Date(date),
 			day = dDate.getDate(),
@@ -97,7 +119,7 @@
 	}
 
 
-	// clean the repository name (replace dash and underscores by whitespace)
+	// clean the repository name (replace dash and underscores by whitespace) - @cleanRepoName
 	function cleanRepoName (str) {
 		return  str.replace(/_|-/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');	
 	}
@@ -109,21 +131,21 @@
 
 	/********************************************************
 	 *
-	 * The functions below are dependant to the fetched datas
+	 * The functions below are dependant to the fetched datas - @@contentExploit
 	 *
 	 ********************************************************/
 
 
-	// display an overview of the last updated repositories
+	// display an overview of the last updated repositories - @lastRepo
 	function lastRepoOverview(repo){
 		var item = $(document.createElement('li'))
-		.text(cleanRepoName(repo.name)+' ('+timespace(repo.updated_at)+')');
+		.html('<a href="'+repo.html_url+'">'+cleanRepoName(repo.name)+'</a> (<a href="'+repo.html_url+'/commits">'+timespace(repo.updated_at)+'</a>)');
 
 		$('.lastRepos').append(item);
 	}
 
 
-	// create the html boxes
+	// create the html boxes - @createRepoBox
 	function createRepoBox (repo) {
 		var homepage = repo.homepage || repo.html_url,
 
@@ -175,7 +197,7 @@
 	}
 
 
-	// translate the boxes using css3 transform
+	// translate the boxes using css3 transform @translateBox
 	function translateCSS ($repo) {
 		var vendor = ['-moz-', '-webkit-', '-ms-', '-o-', ''],
 			data = $repo.data('translate') || [],
@@ -194,7 +216,7 @@
 	}
 
 
-	// create a github's style bar
+	// create a github's style bar - @createLangBar
 	function createBar(obj, total, container){
 		var key, arr, width, sorted, lang, reposCount, $bar, sortable = [];
 		// sort by most use desc
@@ -231,12 +253,12 @@
 
 	/******************
 	 *
-	 * Event Handlers
+	 * Event Handlers - @@eventCallback
 	 *
 	 *****************/
 
 
-	// click on sort button event handler
+	// click on sort button event handler - @sort
 	function sortHandler(){
 		var that = this,
 			sortBy = $(that).data('sort'),
@@ -285,12 +307,12 @@
 
 	/************
 	 *
-	 * Ajax calls
+	 * Ajax calls - @@Ajax
 	 *
 	 ************/
 
 
-	// Fetch the repositories of a user using getJSON
+	// Fetch the repositories of a user using getJSON - @getRepos
 	function getRepos(){
 		$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&callback=?', function (response) {
 
@@ -314,6 +336,7 @@
 							lastRepoOverview(repo);
 						}
 
+
 						// count each language, populate it like {'javascript':13, 'php': 1}
 						if(typeof languages[repo.language] === 'undefined') { languages[repo.language] = 0; } 
 							languages[repo.language] += 1;
@@ -334,7 +357,8 @@
 
 					}	
 				});
-
+				// $('.lastRepos').prepend('Last updated repostories:');
+				$('.lastRepos').prepend('<span class="title">Recently Updated</span>');
 				createBar(languages, totalRepos, $('.meter'));
 				$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 				$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
@@ -345,7 +369,7 @@
 		});
 	}
 
-	// Fetch the data about the current user using getJSON
+	// Fetch the data about the current user using getJSON - @getUser
 	function getUserInfos(){
 		$.getJSON('https://api.github.com/users/'+user+'?callback=?', function (response) {
 
@@ -360,7 +384,7 @@
 				gravatar_link = 'http://www.gravatar.com/avatar/'+info.gravatar_id+'?s=120',
 				picture = $(document.createElement('img')).attr('src', gravatar_link),
 				name = info.name || info.login,
-				bio =  '<span class="about">About: </span>';
+				bio =  '<span class="about title">About </span>';
 
 			custom_bio = name;
 			custom_bio += (info.location) ? ' is a developer based in '+info.location : '';
