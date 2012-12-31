@@ -25,15 +25,15 @@ Current features:
   	- created
   	- updated
   	- description
-  - Display a custom user's repositories
+  - Display users' repositories
+  - Add stacked bar with each language
+  - Card with information about user
 
 ## TODO
 
-  - add stacked bar with each language
   - commit visualisation 
   - display the collaborators
   - better colors for the buttons
-  - card with information about user
   - search with highlighting
   - add a loading message
 
