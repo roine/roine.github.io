@@ -270,10 +270,10 @@
 		}
 
 		// remove the bold to all link into sort
-		$('.sort a, .details .selected').removeClass('selected');
+		$('.sort a, .repo .selected').removeClass('selected');
 		// add bold to the current link
 
-		$(that).add('.listRepos .details .'+sortBy).addClass('selected');
+		$(that).add('.listRepos .repo .'+sortBy).addClass('selected');
 
 		function sortFn ( alpha, beta ) {
             var a = $.data(alpha, 'sort')[sortBy],

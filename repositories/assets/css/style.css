@@ -82,7 +82,7 @@ EWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRk
 	top:100px;
 }
 .title{
-	font-size: 19px;
+	font-size: 24px;
 	color: silver;
 	text-shadow: 1px 1px #21284D;
 	font-weight: bold;
@@ -390,13 +390,7 @@ EWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRk
 .card .lastRepos{
     list-style: none;
 
-    line-height: 32px;
-}
-.card .lastRepos .title{
-	font-size: 19px;
-	color: silver;
-	text-shadow: 1px 1px #21284D;
-	font-weight: bold;
+    line-height: 38px;
 }
 .card .meterWrapper{
     position: absolute;
@@ -610,6 +604,7 @@ footer {
 	background-color: white;
 }
 
-.selected {
+.repo .selected {
 	font-weight: bold;
+	text-shadow: 1px 1px 5px black;
 }
