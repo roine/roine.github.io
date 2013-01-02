@@ -534,7 +534,8 @@ i.empty {
 
 
 .repo {
-	display: block;
+	display: -webkit-flex;
+	display:flex;
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -558,7 +559,6 @@ i.empty {
 .repo .details {
 	display: block;
 	width: 35%;
-	position: absolute;
 	height: 90%;
 }
 

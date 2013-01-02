@@ -36,5 +36,6 @@ Current features:
   - better colors for the buttons
   - search with highlighting
   - add a loading message
+  - add clone and fork links
 
 
