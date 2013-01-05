@@ -161,11 +161,20 @@
 	function createRepoBox (repo) {
 		var homepage = repo.homepage || repo.html_url,
 
+			// main language of the repository
 			language = $(document.createElement('div'))
 			.addClass('language')
 			.text(repo.language)
 			.css('background-color', languagesColor[repo.language]),
 
+			// button the summon the details
+			more = $(document.createElement('a'))
+			.text('More about '+repo.name)
+			.css({'margin': '0 auto', 'top': '30px'})
+			.data('repo', repo.name)
+			.addClass('label label-info more'),
+
+			// left part
 			leftMenu = $(document.createElement('div'))
 			.addClass('details'),
 
@@ -197,8 +206,9 @@
 				'open_issues_count': repo.open_issues_count,
 				'language': repo.language
 			})
-			.addClass('repo drop-shadow')
+			.addClass('repo effect1')
 			.append(leftMenu)
+			.append(more)
 			.append(language)
 			.appendTo('.listRepos');
 
@@ -313,7 +323,10 @@
 	}
 
 
-
+	function displayMore(e){
+		var repo = $(this).data('repo');
+		getCommits(repo);
+	}
 
 
 
@@ -323,28 +336,38 @@
 	 *
 	 ************/
 
-	function getCommits(repos){
+	function getCommits(repo, acc){
 
-		$.each(repos, function (i,repo){
+		acc = (typeof acc !== 'number') ? 0 : acc;
 
-			$.getJSON('https://api.github.com/repos/'+user+'/'+repo+'/commits?callback=?', function (response){
-				console.log(repo)
-				var commits = response;
-				if(commits.message){
-					alert(commits.message);
-					return;
-				}
-				else{
-					$.each(commits, function(i, commit){
-						window.p = commit
-						console.log(Object.size(commit))
-					});
-				}
-				
-				
-			});
+		$.getJSON('https://api.github.com/repos/'+user+'/'+repo+'/commits?per_page=100&callback=?', function (response){
+			var commits = response.data,
+			meta = response.meta,
+			total = Object.size(commits);
+
+
+
+
+			console.log(commits)
+			console.log(meta)
+			window.c = commits;
+			window.m = meta;
+			if(commits.message){
+				alert(commits.message);
+				return;
+			}
+			else{
+				$.each(commits, function(i, commit){
+					if(total == 0)
+						return acc;
+					if(meta.link == 'undefined')
+						return acc + total;
+					link = meta.link
+				});
+			}
+			
+			
 		});
-		
 	}
 
 
@@ -406,7 +429,6 @@
 					$('.reposCount').text(pluralize(totalRepos, 'repository', 'repositories'));
 				}
 			}
-		getCommits(arRepos);
 		});
 	}
 
@@ -466,14 +488,14 @@
 		});
 
 		// fetch the informations about the user
-		getUserInfos();
+		// getUserInfos();
 
 		// fetch the repositories of the user
 		getRepos();
 		
 		// event Listeners
 		$('.sort').on('click', 'a', sortHandler);
-		
+		$(document).on('click', '.more', displayMore);
 	}
 
 	init();
