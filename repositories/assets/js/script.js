@@ -325,7 +325,7 @@
 
 	function displayMore(e){
 		var repo = $(this).data('repo');
-		getCommits(repo);
+		console.log(getCommits(repo));
 	}
 
 
@@ -336,11 +336,12 @@
 	 *
 	 ************/
 
-	function getCommits(repo, acc){
-
+	function getCommits(repo, acc, link, dim){
+		link = (typeof link === 'undefined') ? 'https://api.github.com/repos/'+user+'/'+repo+'/commits?per_page=100&callback=?' : link[dim][0]
 		acc = (typeof acc !== 'number') ? 0 : acc;
-
-		$.getJSON('https://api.github.com/repos/'+user+'/'+repo+'/commits?per_page=100&callback=?', function (response){
+		dim = (typeof dim !== 'number') ? 0 : dim
+		console.log(link)
+		$.getJSON(link, function (response){
 			var commits = response.data,
 			meta = response.meta,
 			total = Object.size(commits);
@@ -357,13 +358,16 @@
 				return;
 			}
 			else{
-				$.each(commits, function(i, commit){
+
 					if(total == 0)
 						return acc;
-					if(meta.link == 'undefined')
+					if(typeof meta.Link == 'undefined'){
+						console.log(acc+total)
 						return acc + total;
-					link = meta.link
-				});
+					}	
+					if(typeof meta.Link === 'object'){
+						getCommits(repo, acc, meta.Link, dim++);
+					}
 			}
 			
 			
