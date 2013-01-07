@@ -535,7 +535,9 @@ i.empty {
 
 .repo {
 	display: -webkit-flex;
+	display:-moz-flex;
 	display:flex;
+
 	position: absolute;
 	left: 0;
 	top: 0;
