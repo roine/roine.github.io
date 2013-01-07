@@ -336,11 +336,9 @@
 	 *
 	 ************/
 
-	function getCommits(repo, acc, link, dim){
-		link = (typeof link === 'undefined') ? 'https://api.github.com/repos/'+user+'/'+repo+'/commits?per_page=100&callback=?' : link[dim][0]
-		acc = (typeof acc !== 'number') ? 0 : acc;
-		dim = (typeof dim !== 'number') ? 0 : dim
-		$.getJSON(link, function (response){
+	function getCommits(repo){
+
+		$.getJSON('https://api.github.com/repos/'+user+'/'+repo+'/commits?per_page=100&callback=?', function (response){
 			var commits = response.data,
 			meta = response.meta,
 			total = Object.size(commits);
@@ -353,16 +351,7 @@
 				return;
 			}
 			else{
-
-					if(total == 0)
-						return acc;
-					if(typeof meta.Link == 'undefined'){
-						console.log(acc+total)
-						return acc + total;
-					}	
-					if(typeof meta.Link === 'object'){
-						getCommits(repo, acc, meta.Link, dim++);
-					}
+				
 			}
 			
 			
@@ -487,7 +476,7 @@
 		});
 
 		// fetch the informations about the user
-		// getUserInfos();
+		getUserInfos();
 
 		// fetch the repositories of the user
 		getRepos();
