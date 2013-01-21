@@ -1,5 +1,5 @@
-/*
- * @@helpers 
+/**
+ * @@helpers
  * @pluralize //add s at end of word if it count more than 1
  * @canCssTransform // check whether css transform is supported by the current browser
  * @timespace // the space between two dates
@@ -20,6 +20,7 @@
  * @getUser
  *
  */
+
 (function ($, window) {
 
 	'use strict';
@@ -37,17 +38,17 @@
 	 * sortDir is the direction of sorting -1 is for DESC
 	 * customUser is the custom user passed in the url hash
 	 * user is default user login 'roine'
-	 * type can be: all, owner, member. 
+	 * type can be: all, owner, member.
 	 * lastRepoOverviewMax define the max number of repositories to display in overview
 	 **********************************************************************************/
-	var sort_by = 'updated',
-		translate = 0,
-		margin = 20,
-		sortDir = -1,
-		customUser = window.location.hash.substring(1),
-		user = customUser || 'roine',
-		type = 'owner', 
-		lastRepoOverviewMax = 3,
+	 var sort_by = 'updated',
+	 translate = 0,
+	 margin = 20,
+	 sortDir = -1,
+	 customUser = window.location.hash.substring(1),
+	 user = customUser || 'roine',
+	 type = 'owner',
+	 lastRepoOverviewMax = 3,
 		// https://raw.github.com/doda/github-language-colors/master/colors.json
 		languagesColor = {"Arduino": "#bd79d1", "Java": "#b07219", "VHDL": "#543978", "Scala": "#7dd3b0", "Emacs Lisp": "#c065db", "Delphi": "#b0ce4e", "Ada": "#02f88c", "VimL": "#199c4b", "Perl": "#0298c3", "Lua": "#fa1fa1", "Rebol": "#358a5b", "Verilog": "#848bf3", "Factor": "#636746", "Ioke": "#078193", "R": "#198ce7", "Erlang": "#949e0e", "Nu": "#c9df40", "AutoHotkey": "#6594b9", "Clojure": "#db5855", "Shell": "#5861ce", "Assembly": "#a67219", "Parrot": "#f3ca0a", "C#": "#555", "Turing": "#45f715", "AppleScript": "#3581ba", "Eiffel": "#946d57", "Common Lisp": "#3fb68b", "Dart": "#cccccc", "SuperCollider": "#46390b", "CoffeeScript": "#244776", "XQuery": "#2700e2", "Haskell": "#29b544", "Racket": "#ae17ff", "Elixir": "#6e4a7e", "HaXe": "#346d51", "Ruby": "#701516", "Self": "#0579aa", "Fantom": "#dbded5", "Groovy": "#e69f56", "C": "#555", "JavaScript": "#f15501", "D": "#fcd46d", "ooc": "#b0b77e", "C++": "#f34b7d", "Dylan": "#3ebc27", "Nimrod": "#37775b", "Standard ML": "#dc566d", "Objective-C": "#f15501", "Nemerle": "#0d3c6e", "Mirah": "#c7a938", "Boo": "#d4bec1", "Objective-J": "#ff0c5a", "Rust": "#dea584", "Prolog": "#74283c", "Ecl": "#8a1267", "Gosu": "#82937f", "FORTRAN": "#4d41b1", "ColdFusion": "#ed2cd6", "OCaml": "#3be133", "Fancy": "#7b9db4", "Pure Data": "#f15501", "Python": "#3581ba", "Tcl": "#e4cc98", "Arc": "#ca2afe", "Puppet": "#cc5555", "Io": "#a9188d", "Max": "#ce279c", "Go": "#8d04eb", "ASP": "#6a40fd", "Visual Basic": "#945db7", "PHP": "#6e03c1", "Scheme": "#1e4aec", "Vala": "#3581ba", "Smalltalk": "#596706", "Matlab": "#bb92ac"};
 
@@ -59,15 +60,15 @@
 
 	 // proto
 	 Object.size = function(obj) {
-	    var key,
-			size = 0;
-	    for (key in obj) {
-	        if (obj.hasOwnProperty(key)) {
-				size += size;
-	        }
-	    }
-	    return size;
-	};
+	 	var key,
+	 	size = 0;
+	 	for (key in obj) {
+	 		if (obj.hasOwnProperty(key)) {
+	 			size += size;
+	 		}
+	 	}
+	 	return size;
+	 };
 
 	// simple pluralize, add s if necessary - @pluralize
 	function pluralize(num, str, suggestion){
@@ -94,49 +95,49 @@
 	// prettify the space between two date - @timespace
 	function timespace(rawDate){
 		var date, seconds, formats, i = 0, f;
-        date = new Date(rawDate);
-        seconds = (new Date() - date) / 1000;
-        formats = [
-            [60, 'seconds', 1],
-            [120, '1 minute ago'],
-            [3600, 'minutes', 60],
-            [7200, '1 hour ago'],
-            [86400, 'hours', 3600],
-            [172800, 'Yesterday'],
-            [604800, 'days', 86400],
-            [1209600, '1 week ago'],
-            [2678400, 'weeks', 604800]
-        ];
+		date = new Date(rawDate);
+		seconds = (new Date() - date) / 1000;
+		formats = [
+		[60, 'seconds', 1],
+		[120, '1 minute ago'],
+		[3600, 'minutes', 60],
+		[7200, '1 hour ago'],
+		[86400, 'hours', 3600],
+		[172800, 'Yesterday'],
+		[604800, 'days', 86400],
+		[1209600, '1 week ago'],
+		[2678400, 'weeks', 604800]
+		];
 
-        while (f = formats[i ++]) {
-            if (seconds < f[0]) {
-                return f[2] ? Math.floor(seconds / f[2]) + ' ' + f[1] + ' ago' :  f[1];
-            }
-        }
-        return 'A while ago';
+		while (f = formats[i ++]) {
+			if (seconds < f[0]) {
+				return f[2] ? Math.floor(seconds / f[2]) + ' ' + f[1] + ' ago' :  f[1];
+			}
+		}
+		return 'A while ago';
 	}
 
 
 	// format the date like following dd mm yyyy, i.e: 18 January 2000 - @formatDate
 	function formatDate(date){
 		var dDate = new Date(date),
-			day = dDate.getDate(),
-			month = dDate.getMonth(),
-			year = dDate.getFullYear(),
-			m_names = ["January", "February", "March", "April", 
-						"May", "June", "July", "August", 
-						"September", "October", "November", "December"];
+		day = dDate.getDate(),
+		month = dDate.getMonth(),
+		year = dDate.getFullYear(),
+		m_names = ["January", "February", "March", "April",
+		"May", "June", "July", "August",
+		"September", "October", "November", "December"];
 
 		// add at beggining if necessary
 		day = (day < 10 && day > 0) ? '0'+day : day;
 
-		return day+' '+m_names[month]+' '+year;  
+		return day+' '+m_names[month]+' '+year;
 	}
 
 
 	// clean the repository name (replace dash and underscores by whitespace) - @cleanRepoName
 	function cleanRepoName (str) {
-		return  str.replace(/_|-/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');	
+		return  str.replace(/_|-/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 	}
 
 
@@ -215,18 +216,18 @@
 			.append(language)
 			.appendTo('.listRepos');
 
-		
-		repoBox.data('translate', [0, translate]);
-		translate += repoBox.outerHeight()+margin;
-		return repoBox;
-	}
+
+			repoBox.data('translate', [0, translate]);
+			translate += repoBox.outerHeight()+margin;
+			return repoBox;
+		}
 
 
 	// translate the boxes using css3 transform @translateBox
 	function translateCSS ($repo) {
 		var vendor = ['-moz-', '-webkit-', '-ms-', '-o-', ''],
-			data = $repo.data('translate') || [],
-			center = Math.floor(($('.listRepos').outerWidth()-$repo.outerWidth())/2);
+		data = $repo.data('translate') || [],
+		center = Math.floor(($('.listRepos').outerWidth()-$repo.outerWidth())/2);
 
 		if(transformSupport()){
 			$.each(vendor, function (i, vendor) {
@@ -248,13 +249,13 @@
 		for (lang in obj){
 			if(obj.hasOwnProperty(lang)){
 				sortable.push([lang, obj[lang]]);
-			}	
+			}
 		}
-		    
+
 		sorted = sortable.sort(function(a, b){return (a[1]-b[1]) * -1; });
 
 		for(key in sorted){
-			if(sorted.hasOwnProperty(key)){ 
+			if(sorted.hasOwnProperty(key)){
 				// modify the following data before displaying it
 				lang = sorted[key][0];
 				reposCount = sorted[key][1];
@@ -270,7 +271,7 @@
 				.appendTo(container);
 			}
 		}
-		
+
 	}
 
 
@@ -286,9 +287,9 @@
 	// click on sort button event handler - @sort
 	function sortHandler(){
 		var that = this,
-			sortBy = $(that).data('sort'),
-			translate = 0,
-			sorted;
+		sortBy = $(that).data('sort'),
+		translate = 0,
+		sorted;
 
 		if($(that).hasClass('selected')){
 			sortDir = (sortDir === 1) ? -1 : 1;
@@ -301,19 +302,19 @@
 		$(that).add('.listRepos .repo .'+sortBy).addClass('selected');
 
 		function sortFn ( alpha, beta ) {
-            var a = $.data(alpha, 'sort')[sortBy],
-                b = $.data(beta, 'sort')[sortBy];
-            if(typeof a === 'string' && typeof b === 'string'){
+			var a = $.data(alpha, 'sort')[sortBy],
+			b = $.data(beta, 'sort')[sortBy];
+			if(typeof a === 'string' && typeof b === 'string'){
 				a = a.toLowerCase();
 				b = b.toLowerCase();
 				return (( b > a ) ? 1 : ( b < a ) ? -1 : 0) * sortDir;
-            }
-            else if(typeof a === 'number' && typeof b === 'number'){
+			}
+			else if(typeof a === 'number' && typeof b === 'number'){
 				return (( a > b ) ? 1 : ( a < b ) ? -1 : 0) * sortDir;
-            }
-            
-        }
-		
+			}
+
+		}
+
 		// sort the repositories
 		sorted = $('.repo').sort( sortFn );
 
@@ -339,27 +340,27 @@
 	 *
 	 ************/
 
-	function getCommits(repo){
+	 function getCommits(repo){
 
-		$.getJSON('https://api.github.com/repos/'+user+'/'+repo+'/commits?per_page=100&callback=?', function (response){
-			var commits = response.data,
-			meta = response.meta,
-			total = Object.size(commits);
+	 	$.getJSON('https://api.github.com/repos/'+user+'/'+repo+'/commits?per_page=100&callback=?', function (response){
+	 		var commits = response.data,
+	 		meta = response.meta,
+	 		total = Object.size(commits);
 
 
-			window.c = commits;
-			window.m = meta;
-			if(commits.message){
-				alert(commits.message);
-				return;
-			}
-			else{
-				
-			}
-			
-			
-		});
-	}
+	 		window.c = commits;
+	 		window.m = meta;
+	 		if(commits.message){
+	 			alert(commits.message);
+	 			return;
+	 		}
+	 		else{
+
+	 		}
+
+
+	 	});
+	 }
 
 
 	// Fetch the repositories of a user using getJSON - @getRepos
@@ -367,11 +368,11 @@
 		$.getJSON('https://api.github.com/users/'+user+'/repos?sort='+sort_by+'&type='+type+'&callback=?', function (response) {
 
 			var repos = response.data,
-				totalRepos = 0,
-				heightWrapper = 0,
-				languages = [],
-				$repo,
-				arRepos = [];
+			totalRepos = 0,
+			heightWrapper = 0,
+			languages = [],
+			$repo,
+			arRepos = [];
 
 			if(repos.message){
 				alert(repos.message);
@@ -381,9 +382,9 @@
 				$.each(repos, function (index, repo) {
 
 				// only parse the non-forked repositories
-					if(!repo.fork) {
+				if(!repo.fork) {
 
-						arRepos.push(repo.name);
+					arRepos.push(repo.name);
 
 						// take the x last updated repo and display it in an overview
 						if(index < lastRepoOverviewMax){
@@ -392,8 +393,8 @@
 
 
 						// count each language, populate it like {'javascript':13, 'php': 1}
-						if(typeof languages[repo.language] === 'undefined') { languages[repo.language] = 0; } 
-							languages[repo.language] += 1;
+						if(typeof languages[repo.language] === 'undefined') { languages[repo.language] = 0; }
+						languages[repo.language] += 1;
 
 						// create the boxes for each repostories
 						$repo = createRepoBox(repo);
@@ -409,19 +410,19 @@
 							$(this).css('border-bottom', '');
 						});
 
-					}	
+					}
 				});
 				// $('.lastRepos').prepend('Last updated repostories:');
 				$('.lastRepos').prepend('<span class="title">Recently Updated</span>');
 				createBar(languages, totalRepos, $('.meter'));
 				$('.listRepos').css('height', heightWrapper+($('.listRepos .repo:last-child').outerHeight()+margin));
 				$('#'+sort_by).add('.details .'+sort_by).addClass('selected');
-				if($('.reposCount').length) { 
+				if($('.reposCount').length) {
 					$('.reposCount').text(pluralize(totalRepos, 'repository', 'repositories'));
 				}
 			}
 		});
-	}
+}
 
 	// Fetch the data about the current user using getJSON - @getUser
 	function getUserInfos(){
@@ -429,16 +430,16 @@
 
 			if(response.message){
 				alert(response.message);
-				
+
 			}
 
 			var $box = $('.card'),
-				info = response.data,
-				custom_bio,
-				gravatar_link = 'http://www.gravatar.com/avatar/'+info.gravatar_id+'?s=120',
-				picture = $(document.createElement('img')).attr('src', gravatar_link),
-				name = info.name || info.login,
-				bio =  '<span class="about title">About </span>';
+			info = response.data,
+			custom_bio,
+			gravatar_link = 'http://www.gravatar.com/avatar/'+info.gravatar_id+'?s=120',
+			picture = $(document.createElement('img')).attr('src', gravatar_link),
+			name = info.name || info.login,
+			bio =  '<span class="about title">About </span>';
 
 			custom_bio = name;
 			custom_bio += (info.location) ? ' is a developer based in '+info.location : '';
@@ -452,13 +453,12 @@
 
 			bio += info.bio || custom_bio;
 			$box.find('.name').text(info.name).end()
-				.find('.nickname').text(info.login).end()
-				.find('.bio').html(bio).end()
-				.find('.picture').append(picture)
-				;
+			.find('.nickname').text(info.login).end()
+			.find('.bio').html(bio).end()
+			.find('.picture').append(picture);
 			$('.preload').removeClass('preload');
 		});
-	}
+}
 
 
 	// constructor
@@ -466,7 +466,7 @@
 
 		// to remove after dev @remove
 		var colorz = ['blue', 'red', 'orange'],
-			i = 0;
+		i = 0;
 		$('.help .button').click(function(){
 			if(++i === colorz.length){
 				i = 0;
@@ -483,7 +483,7 @@
 
 		// fetch the repositories of the user
 		getRepos();
-		
+
 		// event Listeners
 		$('.sort').on('click', 'a', sortHandler);
 		$(document).on('click', '.more', displayMore);
