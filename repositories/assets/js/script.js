@@ -59,9 +59,12 @@
 
 	 // proto
 	 Object.size = function(obj) {
-	    var size = 0, key;
+	    var key,
+			size = 0;
 	    for (key in obj) {
-	        if (obj.hasOwnProperty(key)) size++;
+	        if (obj.hasOwnProperty(key)) {
+				size += size;
+	        }
 	    }
 	    return size;
 	};
