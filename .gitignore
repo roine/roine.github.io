@@ -1,2 +1,4 @@
-node_modules
-.next
+_site
+.sass-cache
+.jekyll-metadata
+.idea
