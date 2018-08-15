@@ -2,9 +2,72 @@
 # Only the main Sass file needs front matter (the dashes are enough)
 ---
 
+// https://github.com/jekyll/minima/blob/master/_sass/minima.scss
+$base-font-size: 1rem;
+$background-color: #323844;
+$footer-background-color: #fff;
 @import "minima";
 
-
-.wrapper {
+.site-header {
   background: white;
+}
+.site-nav {
+  background: #fff;
+}
+
+article {
+  background: #fff;
+  padding: $spacing-unit / 2;
+}
+
+.post-list li, article {
+  background: #fff;
+  border-radius: 2px;
+}
+
+article {
+  padding: $spacing-unit / 2;
+}
+
+.post-head {
+  padding: $spacing-unit / 2;
+  h3 {
+    margin-bottom: 0;
+  }
+}
+
+.post-body {
+  padding: $spacing-unit / 2;
+}
+
+.post-link {
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.post-excerpt {
+  font-size: 0.95rem;
+}
+
+.post-footer {
+  background: #e9e9e9;
+  padding: $spacing-unit / 4 $spacing-unit / 2;
+  border-radius: 0 0 2px 2px;
+  .post-tag {
+    font-weight: bold;
+    font-size: 0.6rem;
+    color: black;
+    text-transform: uppercase;
+  }
+}
+
+footer {
+  background: $footer-background-color;
+}
+
+// Tag page
+.tagpage {
+  h1 {
+    color: #fff;
+  }
 }

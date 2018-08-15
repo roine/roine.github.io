@@ -2,6 +2,7 @@
 layout: post
 title: Common errors in Javascript and how it's solved in ELM
 date: 2018-08-15 12:15 +0100
+tags: javascript elm functional-programming
 ---
 
 One of my favorite things about ELM is the compiler, it will catch errors before they could make their way to production.
