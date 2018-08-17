@@ -22,12 +22,12 @@ ELM app and `elm-package` take care of the dependencies.
 ## It's all about the data
 Functional programming focuses on the data hence ELM has many data types: List, Array, Record, Dict, Set, Maybe, Result 
 and many more. You can easily create your own as well.
-  ```
+```haskell
 type Country 
   = France 
   | UK 
   | ...
-  ```
+```
 In ELM, data are immutable by default while in ReactJS you'd need to download [yet another dependency](https://facebook.github.io/immutable-js/).
  
 
@@ -45,22 +45,22 @@ signature of a public function has changed, ELM automatically bumps the version,
 Dang! `TypeError: b is null` in production and sourcemap is off! Let's start a painful debugging. This sounds familiar? 
 
 Elm solves that problem by failing fast (at compile time). Let's have a look at the Maybe.withDefault method's signature
-```
+```haskell
 withDefault : a -> Maybe a -> a
 ```
 Ok so if we replace all the `a` by `String`, we would expect to pass a `String` then `Maybe String` and it'd return a `String`.
 A correct call would be
-```
+```haskell
 Maybe.withDefault 1 (Just 5)
 // 5
 Maybe.withDefault "1" Nothing
 // "1"
 ```
 Let's call this function inappropriately and get the compiler to report the error:
-```
+```haskell
 Maybe.withDefault 1 (Just "1")
-
-
+```
+```
 -- TYPE MISMATCH --------------------------------------------- repl-temp-000.elm
 
 The 2nd argument to function `withDefault` is causing a mismatch.
