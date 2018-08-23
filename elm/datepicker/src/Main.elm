@@ -4,20 +4,22 @@ import Browser
 import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
 import Task
-import Time exposing (Month(..))
+import Time exposing (Month(..), Weekday(..))
 
 
 type alias Model =
-    Readiness State
+    { now : Time.Posix
+    , here : Time.Zone
+    , firstDayOfWeek : Time.Weekday
+    }
 
 
-type alias State =
-    { date : Date }
-
-
-type Readiness a
-    = Ready a
-    | NotReady
+initialState : Model
+initialState =
+    { now = Time.millisToPosix 0
+    , here = Time.utc
+    , firstDayOfWeek = Mon
+    }
 
 
 type alias Flags =
@@ -26,14 +28,17 @@ type alias Flags =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( NotReady, Task.map2 toDate Time.here Time.now |> Task.perform NewTime )
+    ( initialState
+    , Task.map2 Tuple.pair Time.here Time.now
+        |> Task.perform NewTime
+    )
 
 
 type alias Date =
     { year : Int
     , month : Time.Month
     , day : Int
-    , weekDay : Time.Weekday
+    , weekday : Time.Weekday
     , hour : Int
     , minute : Int
     , seconds : Int
@@ -48,7 +53,7 @@ toDate zone time =
     { year = Time.toYear zone time
     , month = Time.toMonth zone time
     , day = Time.toDay zone time
-    , weekDay = Time.toWeekday zone time
+    , weekday = Time.toWeekday zone time
     , hour = Time.toHour zone time
     , minute = Time.toMinute zone time
     , seconds = Time.toSecond zone time
@@ -56,6 +61,7 @@ toDate zone time =
     , posix = time
     , zone = zone
     }
+
 
 daysInMonth : Int -> Month -> Int
 daysInMonth y m =
@@ -99,40 +105,114 @@ daysInMonth y m =
         Dec ->
             31
 
+
 isLeapYear : Int -> Bool
 isLeapYear y =
-    modBy y  400 == 0 || modBy y  100 /= 0 && modBy y  4 == 0
+    modBy y 400 == 0 || modBy y 100 /= 0 && modBy y 4 == 0
+
+
+
 -- UPDATE
 
 
 type Msg
-    = NewTime Date
+    = NewTime ( Time.Zone, Time.Posix )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
-        ( NewTime time, _ ) ->
-            ( Ready { date = time }, Cmd.none )
+        ( NewTime ( zone, time ), _ ) ->
+            ( { model | here = zone, now = time }
+            , Cmd.none
+            )
 
 
-changeDay : Int -> State -> Date
-changeDay day state =
+changeDay : Int -> Time.Zone -> Time.Posix -> Time.Posix
+changeDay day zone time =
     let
+        date =
+            toDate zone time
+
         dayDiff =
-            (day - state.date.day)
+            day - date.day
 
         dayDiffInMillis =
             dayDiff * millisecondsInDay
     in
-    (Time.posixToMillis state.date.posix + dayDiffInMillis)
+    (Time.posixToMillis date.posix + dayDiffInMillis)
         |> Time.millisToPosix
-        |> toDate state.date.zone
 
 
 millisecondsInDay : Int
 millisecondsInDay =
     1000 * 60 * 60 * 24
+
+
+firstDateOfWeek : Time.Weekday -> Time.Zone -> Time.Posix -> Time.Posix
+firstDateOfWeek firstWeekday zone time =
+    let
+        date =
+            toDate zone time
+    in
+    repeatUntil
+        (\newTime ->
+            (Time.posixToMillis newTime - millisecondsInDay)
+                |> Time.millisToPosix
+        )
+        ((==) firstWeekday << .weekday << toDate zone)
+        time
+
+
+lastDateOfWeek : Time.Weekday -> Time.Zone -> Time.Posix -> Time.Posix
+lastDateOfWeek lastWeekday zone time =
+    let
+        date =
+            toDate zone time
+    in
+    repeatUntil
+        (\newTime ->
+            (Time.posixToMillis newTime + millisecondsInDay)
+                |> Time.millisToPosix
+        )
+        ((==) lastWeekday << .weekday << toDate zone)
+        time
+
+
+repeatUntil : (a -> a) -> (a -> Bool) -> a -> a
+repeatUntil f predicate n =
+    let
+        go m =
+            if predicate m then
+                m
+            else
+                go (f m)
+    in
+    go n
+
+
+previousWeekday weekday =
+    case weekday of
+        Mon ->
+            Sun
+
+        Tue ->
+            Mon
+
+        Wed ->
+            Tue
+
+        Thu ->
+            Wed
+
+        Fri ->
+            Thu
+
+        Sat ->
+            Fri
+
+        Sun ->
+            Sat
 
 
 
@@ -141,17 +221,24 @@ millisecondsInDay =
 
 view : Model -> Html Msg
 view model =
-    case model of
-        NotReady ->
-            text "not ready"
+    let
+        date =
+            toDate model.here model.now
 
-        Ready state ->
-            div []
-                [ text "hello world"
-                , text (Debug.toString state)
-                , text ("first day" ++ Debug.toString (changeDay 1 state))
-                , text ("last day" ++ Debug.toString (changeDay (daysInMonth state.date.year state.date.month) state))
-                ]
+        firstDayOfMonth =
+            changeDay 1 model.here model.now
+
+        lastDayOfMonth =
+            changeDay (daysInMonth date.year date.month) model.here model.now
+    in
+    div []
+        [ div [] [ text ("first day" ++ Debug.toString (toDate model.here firstDayOfMonth)) ]
+        , div []
+            [ text ("last day" ++ Debug.toString (toDate model.here lastDayOfMonth))
+            ]
+        , div [] [ text (Debug.toString (toDate model.here (firstDateOfWeek model.firstDayOfWeek model.here firstDayOfMonth))) ]
+        , div [] [ text (Debug.toString (toDate model.here (lastDateOfWeek (previousWeekday model.firstDayOfWeek) model.here lastDayOfMonth))) ]
+        ]
 
 
 
