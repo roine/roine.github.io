@@ -1,7 +1,8 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, button, div, text)
+import Html exposing (Html, button, div, span, text)
+import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Task
 import Time exposing (Month(..), Weekday(..))
@@ -271,6 +272,23 @@ previousWeekday weekday =
             Sat
 
 
+listGrouping : Int -> List a -> List (List a)
+listGrouping width elements =
+    let
+        go i list racc acc =
+            case list of
+                [] ->
+                    List.reverse acc
+
+                x :: xs ->
+                    if i == width - 1 then
+                        go 0 xs [] (List.reverse (x :: racc) :: acc)
+                    else
+                        go (i + 1) xs (x :: racc) acc
+    in
+    go 0 elements [] []
+
+
 
 -- VIEW
 
@@ -286,6 +304,13 @@ view model =
 
         lastDayOfMonth =
             changeDay (daysInMonth date.year date.month) model.here model.now
+
+        calendarData =
+            listGrouping 7
+                (datesInRange model.here
+                    (firstDateOfWeek config.firstDayOfWeek model.here firstDayOfMonth)
+                    (lastDateOfWeek (previousWeekday config.firstDayOfWeek) model.here lastDayOfMonth)
+                )
     in
     div []
         [ div [] [ text ("first day" ++ Debug.toString (toDate model.here firstDayOfMonth)) ]
@@ -298,15 +323,43 @@ view model =
             [ text
                 (Debug.toString
                     (List.map
-                        (\t -> .day (toDate model.here t))
-                        (datesInRange model.here
-                            (firstDateOfWeek config.firstDayOfWeek model.here firstDayOfMonth)
-                            (lastDateOfWeek (previousWeekday config.firstDayOfWeek) model.here lastDayOfMonth)
+                        (\l -> List.map (\t -> .day (toDate model.here t)) l)
+                        (listGrouping 7
+                            (datesInRange model.here
+                                (firstDateOfWeek config.firstDayOfWeek model.here firstDayOfMonth)
+                                (lastDateOfWeek (previousWeekday config.firstDayOfWeek) model.here lastDayOfMonth)
+                            )
                         )
                     )
                 )
             ]
+        , div [ style "display" "flex", style "flex-direction" "column" ]
+            (List.map
+                (\row ->
+                    div [ style "display" "flex" ]
+                        (List.map
+                            (\cellDate ->
+                                div [ style "border" "1px solid red", style "padding" "10px" ]
+                                    [ cellDate
+                                        |> dateToString model.here
+                                        |> text
+                                    ]
+                            )
+                            row
+                        )
+                )
+                calendarData
+            )
         ]
+
+
+dateToString : Time.Zone -> Time.Posix -> String
+dateToString zone time =
+    let
+        date =
+            toDate zone time
+    in
+    Debug.toString date.weekday ++ " " ++ Debug.toString date.day ++ " " ++ Debug.toString date.month
 
 
 

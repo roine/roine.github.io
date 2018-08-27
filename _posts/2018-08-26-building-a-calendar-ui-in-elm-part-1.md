@@ -7,6 +7,8 @@ tags: elm functional-programming tutorial
 ELM was redesign recently and `Date` and `Time` have been removed from the core to the `Time` library. With that in mind 
 let's build a calendar.
 
+__Note__: In the following some code samples are heavily influenced or copied from [elm-community/elm-datepicker][0].
+
 In this first part, we'll make a list of dates for a give month and year. Eg: [1 Jan 2018, 2 Jan 2018,.., 31 Jan 2018].
 I'll skip a lot of steps but you'll find the whole code attached at the end of this article.
 
@@ -109,13 +111,13 @@ Then we'll just need to call `changeDay (daysInMonth date.year date.month) date`
 
 ## Get the first and last date of the calendar grid
 The calendar is going to be a grid of 7 columns and a variable amount of rows. Eg:
-<center><img src="{{ "assets/elm/datepicker/screenshot_1.png" | absolute_url }}" alt="Typical calendar view" width="250"/></center>
+<center><img src="{{ "/elm/datepicker/images/screenshot_1.png" | absolute_url }}" alt="Typical calendar view" width="250"/></center>
 At the moment we've got the first (Wed 1 Aug 2018) and the last day (Fri 31 Sep 2018) of the month. We'll need to extend these dates
 to reach the first and last day of the week. 
 
 But what should be the first day of the week? Here is what Wikipedia says:
 <center>
-    <img src="{{ "assets/elm/datepicker/screenshot_2.png" | absolute_url }}" alt="First Day of week according to Wikipedia" width="250"/>
+    <img src="{{ "/elm/datepicker/imagesscreenshot_2.png" | absolute_url }}" alt="First Day of week according to Wikipedia" width="250"/>
 </center>
 
 
@@ -195,6 +197,7 @@ That’s it for now! We’ve got all the days in the calendar. In the next part 
 
 Here’s the [result in a page][2] and [here is the code][3].
 
+[0]: https://github.com/elm-community/elm-datepicker
 [1]: https://github.com/elm-community/elm-time/blob/master/src/Time/Date.elm#L478
 [2]: /elm/datepicker/index_1.html
 [3]: https://github.com/roine/roine.github.com/blob/elm-datepicker-part1/elm/datepicker/src/Main.elm
