@@ -40,5 +40,37 @@ Procedure:
     - Yes? Return the reversed general accumulator (acc).
     
 The data now has the shape we want, we can start working on the UI.
+
+## Rendering the days in the calendar
+We're going to use a table to render the days.
+```haskell
+table [ style "border-collapse" "collapse", style "border-spacing" "0" ]
+    [ tbody []
+        (List.map
+            (\row ->
+                tr []
+                    (List.map
+                        (\cellDate ->
+                            td [ style "border" "1px solid lightgrey" ]
+                                [ button
+                                    [ style "height" "100%"
+                                    , style "width" "100%"
+                                    , style "background" "none"
+                                    , style "border" "0"
+                                    , style "padding" "15px"
+                                    ]
+                                    [ .day (toDate model.here cellDate)
+                                        |> String.fromInt
+                                        |> text
+                                    ]
+                                ]
+                        )
+                        row
+                    )
+            )
+            calendarData
+        )
+    ]
+```
     
 [1]: https://github.com/elm-community/elm-datepicker

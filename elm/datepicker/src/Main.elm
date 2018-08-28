@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, button, div, span, text)
+import Html exposing (Html, button, div, option, select, span, table, tbody, td, text, thead, tr)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Task
@@ -11,6 +11,7 @@ import Time exposing (Month(..), Weekday(..))
 type alias Model =
     { now : Time.Posix
     , here : Time.Zone
+    , config : Config
     }
 
 
@@ -23,10 +24,11 @@ config =
     { firstDayOfWeek = Mon }
 
 
-initialState : Model
-initialState =
+initialModel : Model
+initialModel =
     { now = Time.millisToPosix 0
     , here = Time.utc
+    , config = config
     }
 
 
@@ -36,7 +38,7 @@ type alias Flags =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( initialState
+    ( initialModel
     , Task.map2 Tuple.pair Time.here Time.now
         |> Task.perform NewTime
     )
@@ -125,13 +127,23 @@ isLeapYear y =
 
 type Msg
     = NewTime ( Time.Zone, Time.Posix )
+    | ChangeFirstDay Time.Weekday
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case ( msg, model ) of
-        ( NewTime ( zone, time ), _ ) ->
+    let
+        config_ =
+            model.config
+    in
+    case msg of
+        NewTime ( zone, time ) ->
             ( { model | here = zone, now = time }
+            , Cmd.none
+            )
+
+        ChangeFirstDay newFirstDay ->
+            ( { model | config = { config_ | firstDayOfWeek = newFirstDay } }
             , Cmd.none
             )
 
@@ -308,49 +320,48 @@ view model =
         calendarData =
             listGrouping 7
                 (datesInRange model.here
-                    (firstDateOfWeek config.firstDayOfWeek model.here firstDayOfMonth)
-                    (lastDateOfWeek (previousWeekday config.firstDayOfWeek) model.here lastDayOfMonth)
+                    (firstDateOfWeek model.config.firstDayOfWeek model.here firstDayOfMonth)
+                    (lastDateOfWeek (previousWeekday model.config.firstDayOfWeek) model.here lastDayOfMonth)
                 )
     in
     div []
-        [ div [] [ text ("first day" ++ Debug.toString (toDate model.here firstDayOfMonth)) ]
-        , div []
-            [ text ("last day" ++ Debug.toString (toDate model.here lastDayOfMonth))
+        [ table
+            [ style "border-collapse" "collapse"
+            , style "border-spacing" "0"
             ]
-        , div [] [ text (Debug.toString (toDate model.here (firstDateOfWeek config.firstDayOfWeek model.here firstDayOfMonth))) ]
-        , div [] [ text (Debug.toString (toDate model.here (lastDateOfWeek (previousWeekday config.firstDayOfWeek) model.here lastDayOfMonth))) ]
-        , div []
-            [ text
-                (Debug.toString
-                    (List.map
-                        (\l -> List.map (\t -> .day (toDate model.here t)) l)
-                        (listGrouping 7
-                            (datesInRange model.here
-                                (firstDateOfWeek config.firstDayOfWeek model.here firstDayOfMonth)
-                                (lastDateOfWeek (previousWeekday config.firstDayOfWeek) model.here lastDayOfMonth)
+            [ thead [] [ tr [] [] ]
+            , tbody []
+                (List.map
+                    (\row ->
+                        tr []
+                            (List.map
+                                (\cellDate ->
+                                    td [ style "border" "1px solid lightgrey" ]
+                                        [ button
+                                            [ style "height" "100%"
+                                            , style "width" "100%"
+                                            , style "background" "none"
+                                            , style "border" "0"
+                                            , style "padding" "15px"
+                                            ]
+                                            [ .day (toDate model.here cellDate)
+                                                |> String.fromInt
+                                                |> text
+                                            ]
+                                        ]
+                                )
+                                row
                             )
-                        )
                     )
+                    calendarData
                 )
             ]
-        , div [ style "display" "flex", style "flex-direction" "column" ]
-            (List.map
-                (\row ->
-                    div [ style "display" "flex" ]
-                        (List.map
-                            (\cellDate ->
-                                div [ style "border" "1px solid red", style "padding" "10px" ]
-                                    [ cellDate
-                                        |> dateToString model.here
-                                        |> text
-                                    ]
-                            )
-                            row
-                        )
-                )
-                calendarData
-            )
+        , select [] (List.map (\( weekdayStr, weekday ) -> option [ onClick (ChangeFirstDay weekday) ] [ text weekdayStr ]) weekdayList)
         ]
+
+
+weekdayList =
+    [ ( "Mon", Mon ), ( "Tue", Tue ), ( "Wed", Wed ), ( "Thu", Thu ), ( "Fri", Fri ), ( "Sat", Sat ), ( "Sun", Sun ) ]
 
 
 dateToString : Time.Zone -> Time.Posix -> String
