@@ -2,19 +2,25 @@ import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import {
+  addTimeTravelingToState,
+  createReducerWithEvent
+}  from './helper';
+
 class App extends Component {
   constructor(props) {
     super(props);
-    const initialModel = {text: "Hello World"}
-    this.state = {
-      model: initialModel,
-      history: [initialModel],
-      currentHistory: 1,
-      traveling: false
-    };
+    const initialModel = {text: "Hello World", counter: 0}
+    this.state = addTimeTravelingToState({
+      model: initialModel
+    });
 
-    this.changeText = this.changeText.bind(this);
     this.travelTime = this.travelTime.bind(this);
+    this.doChangeText = this.doChangeText.bind(this);
+    this.createReducerWithEvent = createReducerWithEvent.bind(this);
+
+    this.changeText = this.createReducerWithEvent(this.doChangeText);
+    this.clickButton = this.createReducerWithEvent(this.doClickButton);
   }
 
   render() {
@@ -26,44 +32,39 @@ class App extends Component {
         </header>
         <p className="App-intro">
           <input type="text" onChange={this.changeText} value={this.state.model.text}/>
-          <input type="range" min="1" onChange={this.travelTime} max={this.state.history.length}
-                 value={this.state.currentHistory}/>
-          {this.state.currentHistory}/{this.state.history.length}
         </p>
+        <div>
+          <button onClick={this.clickButton}>Increment</button>
+          {this.state.model.counter}
+        </div>
+        <div>
+          <input type="range" min="1" onChange={this.travelTime} max={this.state._history.length}
+                 value={this.state._currentHistory}/>
+          {this.state._currentHistory}/{this.state._history.length}
+        </div>
       </div>
     );
   }
 
+  // no side effect here
+  doChangeText(prevModel, e) {
+    const newText = e.target.value;
+    return Object.assign({}, prevModel, {text: newText});
+  }
+
+  doClickButton(prevModel, e) {
+    return Object.assign({}, prevModel, {counter: prevModel.counter + 1});
+  }
+
+
   travelTime(e) {
     e.persist();
-    const model = this.state.history[e.target.value - 1]
+    const model = this.state._history[e.target.value - 1];
     this.setState(prevState => ({
       model: model,
-      currentHistory: e.target.value,
-      traveling: parseInt(e.target.value, 10) !== this.state.history.length
+      _currentHistory: e.target.value,
+      _traveling: parseInt(e.target.value, 10) !== this.state._history.length
     }))
-  }
-
-  changeText(e) {
-    if (this.state.traveling) return;
-    e.persist();
-    this.setState(this.doChangeText.bind(null, e.target.value))
-    e.preventDefault();
-  }
-
-  doChangeText(newText, prevState) {
-    const newModel = {
-      ...prevState.model,
-      text: newText
-
-    };
-    const newHistory = [...prevState.history, newModel];
-
-    return {
-      model: newModel,
-      history: newHistory,
-      currentHistory: prevState.currentHistory + 1
-    }
   }
 }
 
