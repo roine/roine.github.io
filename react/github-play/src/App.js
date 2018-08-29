@@ -51,7 +51,6 @@ class App extends Component {
     e.preventDefault();
   }
 
-  @injectHistory
   doChangeText(newText, prevState) {
     const newModel = {
       ...prevState.model,
@@ -66,11 +65,6 @@ class App extends Component {
       currentHistory: prevState.currentHistory + 1
     }
   }
-}
-
-function injectHistory(target, name, descriptor) {
-  console.log()
-  return descriptor;
 }
 
 export default App;
