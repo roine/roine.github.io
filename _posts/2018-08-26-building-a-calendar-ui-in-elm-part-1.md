@@ -197,7 +197,11 @@ That’s it for now! We’ve got all the days in the calendar. In the next part 
 
 Here’s the [result in a page][2] and [here is the code][3].
 
+__This is a multiple part tutorial__:
+- [Part 2][part_2]
+
 [0]: https://github.com/elm-community/elm-datepicker
 [1]: https://github.com/elm-community/elm-time/blob/master/src/Time/Date.elm#L478
 [2]: /elm/datepicker/index_1.html
 [3]: https://github.com/roine/roine.github.com/blob/elm-datepicker-part1/elm/datepicker/src/Main.elm
+[part_2]: {% post_url 2018-09-04-building-a-calendar-ui-in-elm-part-2 %}
